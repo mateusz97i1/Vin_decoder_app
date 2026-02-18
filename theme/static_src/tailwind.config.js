@@ -42,7 +42,13 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            screens: {
+            '3xl': '120rem',},
+            fontFamily: {
+                roboto: ['Roboto', 'sans-serif'],
+            },
+        },
     },
     plugins: [
         /**
