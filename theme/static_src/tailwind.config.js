@@ -44,10 +44,18 @@ module.exports = {
     theme: {
         extend: {
             screens: {
-            '3xl': '120rem',},
+                '3xl': '120rem',
+            },
             fontFamily: {
                 roboto: ['Roboto', 'sans-serif'],
             },
+            colors: {
+                'primary': '#1A2238', //headers and navigation.
+                'status': '#FF3B30',//allert
+                'accent': '#007AFF',//buttons
+                'background': '#F2F2F7', //like so
+            },
+
         },
     },
     plugins: [
