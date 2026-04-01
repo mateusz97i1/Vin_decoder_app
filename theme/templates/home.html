@@ -23,18 +23,39 @@
 <body class="font-roboto">
     <div class="flex flex-col items-center justify-center bg-background min-h-svh">
         <div class="container flex flex-col px-4 py-8 mx-auto text-center ">
-            <h1 class="mb-4 text-4xl font-bold">Welcome to Vinex- VIN decoder</h1>
+            <h1 class="mb-4 text-4xl font-bold">Welcome to Vinex-USA car VIN decoder</h1>
             <p>We are a team of wine enthusiasts dedicated to providing you with the best VIN decoding experience.</p>
         </div>
-        <div class="">
-            <form action="/decode" method="get" class="flex flex-col">
+        <div>
+            <form method="get" class="flex flex-col">
                 {% csrf_token %}
-                <input type="text">
+                <input type="text" name="vin" placeholder="Enter VIN">
                 <button type="submit"
                     class="self-center px-5 py-1 mt-2 capitalize rounded-xl text-background w-fit bg-accent">
                     decode
                 </button>
             </form>
+        </div>
+
+        <div>
+
+            {% if car_info %}
+            <p>Make: {{ car_info.Make }}</p>
+
+            {% if car_info.Model %}
+            <p>Model: {{ car_info.Model }}</p>
+            <p>Year: {{ car_info.ModelYear }}</p>
+            <p>Engine: {{ car_info.DisplacementL }} L</p>
+            <p>Cylinders: {{ car_info.EngineCylinders }}</p>
+            <p>Power: {{ car_info.EngineHP }} hp</p>
+            <p>Engine Model: {{ car_info.EngineModel }}</p>
+            <p>Drive Type: {{ car_info.DriveType }}</p>
+
+            {% endif %}
+
+
+
+            {% endif %}
         </div>
     </div>
 </body>
