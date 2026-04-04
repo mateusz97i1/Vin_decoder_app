@@ -9,12 +9,18 @@ from .services import get_vehicle_data_vin
 
 
 def home(request):
-    vin = request.GET.get("vin")
-
+    vin = request.GET.get("vin", "").strip()
     
-    car_info = get_vehicle_data_vin(vin)
+    car_info = None
+    message_error = None
 
-    return render(request, 'home.html', {'car_info': car_info})
+    if vin:
+        car_info, message_error = get_vehicle_data_vin(vin)
+
+    return render(request, 'home.html',
+                   {'car_info': car_info,
+                    'message_error': message_error,
+                    'vin': vin})
 
 
 def openai_get_car_info():
