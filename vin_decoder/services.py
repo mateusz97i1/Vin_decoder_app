@@ -1,5 +1,6 @@
 import requests
 import logging
+import os
 
 #We don't print in production
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ def get_vehicle_data_vin(vin: str):
     Returns a dict of data or a dict containing an error message.
     """
     vin = vin.strip().upper()  # Ensure VIN is in the correct format
-
+    url= os.getenv('NHTSA_API_URL') + vin
     if not vin:
         return None, "Please provide a VIN number"
 
@@ -20,8 +21,14 @@ def get_vehicle_data_vin(vin: str):
 
 
     try:
-        url = f'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValues/{vin}?format=json'
-        response = requests.get(url,timeout= 10)
+        
+        response = requests.get(
+            url,
+            params={'format': 'json'},
+            timeout= 10
+            )
+        
+        
         response.raise_for_status()
 
         data = response.json()

@@ -28,19 +28,35 @@
         </div>
         <!-- #decode form butoon and input -->
         <div>
-            <form method="get" class="flex flex-col">
+            <form method="get" class="flex flex-col gap-4 ">
                 {% csrf_token %}
-                <input type="text" name="vin" placeholder="Enter VIN">
+
+                <div class="flex flex-col items-center text-center">
+                    {{ form_vin.vin_number }}
+
+                    {% if form_vin.vin_number.errors %}
+                    <span class="mt-1 text-sm text-red-500 max-w-fit">
+                        {{ form_vin.vin_number.errors.0 }}
+                    </span>
+                    {% endif %}
+
+                    {% if form_vin.vin_number.help_text %}
+                    <span class="mt-1 text-xs text-gray-400">
+                        {{ form_vin.vin_number.help_text }}
+                    </span>
+                    {% endif %}
+                </div>
+
                 <button type="submit"
-                    class="self-center px-5 py-1 mt-2 capitalize rounded-xl text-background w-fit bg-accent">
+                    class="self-center px-5 py-2 mt-2 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
                     decode
                 </button>
             </form>
         </div>
+
+
         <!-- #results section -->
         <div>
-
-
             {% if error_message %}
             <div class="">
                 <strong>Error:</strong> {{ error_message }}
