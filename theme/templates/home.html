@@ -75,6 +75,14 @@
             <p>Power: {{ car_info.EngineHP }} hp</p>
             <p>Engine Model: {{ car_info.EngineModel }}</p>
             <p>Drive Type: {{ car_info.DriveType }}</p>
+            <p>Get info</p>
+            <form method="post">
+                {% csrf_token %}
+
+                <input type="submit" name="typical_issues"
+                    value="Typical issues for {{ car_info.Make }} {{ car_info.Model }}"
+                    class="self-center px-5 py-2 mt-2 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
+            </form>
             {% else %}
             <p>No additional information available for this VIN.</p>
             {% endif %}
