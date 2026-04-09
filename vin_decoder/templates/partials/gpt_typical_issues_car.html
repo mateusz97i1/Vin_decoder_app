@@ -1,0 +1,17 @@
+{% load static tailwind_tags %}
+{% load static %}
+
+<form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response" hx-swap="innerHTML">
+    {% csrf_token %}
+
+    <input type="hidden" name="typical_issues" value="true">
+
+    <button type="submit"
+        class="self-center px-5 py-2 mt-2 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
+        Typical issues for {{ car_info.Make }} {{ car_info.Model }}
+    </button>
+</form>
+
+<div id="response_test">
+    <p class="mt-4 text-lg font-semibold">{{ message }}</p>
+</div>

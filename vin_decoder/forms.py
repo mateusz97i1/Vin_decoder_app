@@ -25,5 +25,7 @@ class InputVinForm(forms.Form):
             'placeholder': "Enter 17-digit VIN",
             'style' : "text-transform: uppercase;" 
         }),
-        help_text = "please enter VIN(chasis) number"
+        help_text = "please enter VIN(chasis) number",
+        # just for testing purposes, you can remove it later
+        initial= "WF0DP3TH6H4123982" 
     )

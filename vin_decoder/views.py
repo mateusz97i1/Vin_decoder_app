@@ -26,15 +26,6 @@ def home(request):
         vin = form_vin.cleaned_data['vin_number']
         car_info, message_error = get_vehicle_data_vin(vin)
 
-    if request.method == "POST":
-
-        print(request.POST)
-
-        if "typical_issues" in request.POST:
-
-            print("typical iussewerwerw5r444444444444444444sr")
-
-
 
     return render(request, 'home.html',{
         'car_info': car_info,
@@ -50,10 +41,17 @@ def openai_get_car_info(request):
     """
 
     if request.method == "POST":
-
-        print(request.POST)
-
+        # Sprawdzamy czy w POST jest nasz klucz
         if "typical_issues" in request.POST:
+            # Tutaj Twoja logika (np. zapytanie do OpenAI)
+            message = "Znaleziono typowe usterki: Problem z pompą paliwa, wycieki oleju..."
+            
+            # Zwracasz TYLKO partiala. Django znajdzie go w folderze templates/partials/
+            return render(request, 'partials/gpt_typical_issues_car.html', {'message': message})
 
-            print("typical iussewerwerw5r444444444444444444sr")
+    # Dla GET (pierwsze wejście) ładujesz całą stronę
+    return render(request, 'home.html')
 
+
+def xd(request):
+    pass
