@@ -1,17 +1,35 @@
 {% load static tailwind_tags %}
 {% load static %}
 
-<form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response" hx-swap="innerHTML">
-    {% csrf_token %}
+<div class="max-w-2xl mx-auto my-6 overflow-hidden bg-white border shadow-sm border-amber-100 rounded-xl">
+    <div class="flex items-start gap-4 p-5 bg-amber-50/50">
+        <div class="p-2 rounded-lg bg-amber-100 shrink-0">
+            <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
 
-    <input type="hidden" name="typical_issues" value="true">
 
-    <button type="submit"
-        class="self-center px-5 py-2 mt-2 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
-        Typical issues for {{ car_info.Make }} {{ car_info.Model }}
-    </button>
-</form>
+        <div class="flex-1">
 
-<div id="response_test">
-    <p class="mt-4 text-lg font-semibold">{{ message }}</p>
+            {% if message_error %}
+            <div class="mt-3 text-sm leading-relaxed prose-sm prose text-gray-700 prose-amber max-w-none">
+                {{message_error }}
+            </div>
+            {% endif %}
+
+
+            <h3 class="text-xs font-bold tracking-wider uppercase text-amber-800/80">
+                Common issues raport
+            </h3>
+            <p class="mt-1 font-semibold text-gray-900">
+                {{ message }}
+            </p>
+
+            <div class="mt-3 text-sm leading-relaxed prose-sm prose text-gray-700 prose-amber max-w-none">
+                {{ results_html|safe }}
+            </div>
+        </div>
+    </div>
 </div>

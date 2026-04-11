@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 import os
-
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -159,5 +159,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# api andres for VIN validation
-NHTSA_API_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValues/"
+#setting a logging save info
+logging.basicConfig(
+    filename="vinex_app.log",
+    level=logging.INFO,
+    format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    filemode= 'a' #Append mode
+)

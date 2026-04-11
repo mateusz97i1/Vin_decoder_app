@@ -82,8 +82,18 @@
             <p>Get info</p>
 
             <!-- partial redner -->
-            <div id="partial_typical_issues_response">
-                {% include 'partials/gpt_typical_issues_car.html' %}
+            <form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response"
+                hx-swap="innerHTML">
+                {% csrf_token %}
+                <input type="hidden" name="typical_issues"
+                    value="{{ car_info.Make }} {{ car_info.Model }} {{ car_info.ModelYear }} {{ car_info.DisplacementL }}Liter {{ car_info.EngineHP }} hp">
+
+                <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent">
+                    Check issues for {{ car_info.Make }} {{ car_info.Model }}
+                </button>
+            </form>
+
+            <div id="partial_typical_issues_response" class="mt-4">
             </div>
             {% else %}
             <p>No additional information available for this VIN.</p>

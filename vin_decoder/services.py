@@ -10,10 +10,12 @@ def get_vehicle_data_vin(vin: str):
     Fetches vehicle data from NHTSA API. 
     Returns a dict of data or a dict containing an error message.
     """
-    vin = vin.strip().upper()  # Ensure VIN is in the correct format
-    url= os.getenv('NHTSA_API_URL') + vin
     if not vin:
         return None, "Please provide a VIN number"
+    
+    vin = vin.strip().upper()  # Ensure VIN is in the correct format
+    url= os.getenv('NHTSA_API_URL') + vin
+    
 
 
     if len(vin) != 17:
