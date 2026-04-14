@@ -1,5 +1,5 @@
 import openai
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 import os
 import requests
 import logging
@@ -7,7 +7,7 @@ import markdown2
 
 from .forms import InputVinForm
 from django.shortcuts import render , redirect
-from .services import get_vehicle_data_vin
+from .services import get_vehicle_data_vin, openai_prompt_basic
 
 
 #create logger
@@ -16,11 +16,8 @@ logger = logging.getLogger(__name__)
 #focus rs vin number
 test_vin = "WF0DP3TH6H4123982"
 
-#gpt model with api
-MODEL_GPT='gpt-5.4-mini'
-openai_api_key= os.getenv('OPENAI_API_KEY')
 
-
+@require_GET
 def home(request):
     """
     gets vin info from API
@@ -31,13 +28,13 @@ def home(request):
     vin = None
     form_vin =InputVinForm(request.GET or None)
 
-    if request.method == "GET" and form_vin.is_valid():
+    if form_vin.is_valid():
 
         vin = form_vin.cleaned_data['vin_number']
         car_info, message_error = get_vehicle_data_vin(vin)
 
 
-    return render(request, 'home.html',{
+    return render(request, 'home.html',context= {
         'car_info': car_info,
         'message_error': message_error,
         'vin': vin,
@@ -46,52 +43,32 @@ def home(request):
 
 
 @require_POST
-def openai_get_car_info(request):
+def openai_common_car_issues(request):
     """
-    ask chatgpt API about car with given information
+    ask chatgpt API about most common car issues
     """
 
-    if request.method == "POST":
-        #Check if our key is in post 
-        if "typical_issues" in request.POST:
-            #get car value
-            car_description = request.POST.get("typical_issues", "")
+    #system promt message to AI
+    system_prompt =  "U are, a car ethusiasd, with given information tell me about 3 typical issues with this car model:"
 
-            if car_description:
+    
+    car_description = request.POST.get("typical_issues", "")
 
-                #system promt message to AI
-                system_prompt = """
-                                U are, a car ethusiasd, with given information tell me about
-                                  3 typical issues with this car model:
-                                """
+    #Check if our key is in post 
+    if not car_description:
 
-                try:
-                    response = openai.chat.completions.create(
-                        model = MODEL_GPT,
-                        messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": car_description},
-                    ],
-                        timeout= 30
+        return render(request, 'partials/gpt_typical_issues_car.html', {'message_error': "No data to analyze"})
+        
+    results_html , message_error = openai_prompt_basic(car_description, system_prompt)
 
-                    )
-
-                    results = response.choices[0].message.content
-
-                    #markdown visual edit
-                    results_html = markdown2.markdown(results, extras= ['break-on-newline'])
-
-                    #create message for user abt typical issues
-                    message = f"The typical issues for {car_description} are as follows:"
-
-                except requests.exceptions.Timeout as e:
-
-                    logger.exception(f"found timeout error{e}")
-                    message_error = "Try again later"
-
-                    return render(request, 'partials/gpt_typical_issues_car.html', {'message_error': message_error})
-                    
-                    # Return onlyu partial from templates/partials/
-                return render(request, 'partials/gpt_typical_issues_car.html', {'message': message,
-                                                                                'results_html': results_html
-                                                                                })
+    #create message for user abt typical issues
+    message = f"The typical issues for {car_description} are as follows:"
+            
+        # Return onlyu partial from templates/partials/
+    return render(request, 'partials/gpt_typical_issues_car.html', 
+                    context= {
+                    'message': message,
+                    'results_html': results_html,
+                    'message_error': message_error
+                    })
+            

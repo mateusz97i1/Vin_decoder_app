@@ -1,9 +1,20 @@
 import requests
 import logging
 import os
+import openai
+import markdown2
+
+from django.shortcuts import render
+from openai import OpenAIError
+from openai import OpenAI
 
 #We don't print in production
 logger = logging.getLogger(__name__)
+
+#gpt model with api
+MODEL_GPT='gpt-5.4-mini'
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
 
 def get_vehicle_data_vin(vin: str):
     """
@@ -62,4 +73,45 @@ def get_vehicle_data_vin(vin: str):
         
         logger.exception(f"error fetching Vin data{e}")
         return None, "Can't retrieve data"
+
+
+def openai_prompt_basic( car_description, system_prompt):
+    """
+    ask chatgpt API about car with given information
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model = MODEL_GPT,
+            messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": car_description},
+        ],
+            timeout= 30
+
+        )
+
+        results = response.choices[0].message.content
+
+        #markdown visual edit
+        results_html = markdown2.markdown(results, extras= ['break-on-newline'])
+
+        return results_html, None
+
+    except requests.exceptions.Timeout as e:
+
+        logger.exception(f"found timeout error{e}")
+
+        return None, "Try again later"
+    
+
+    except OpenAIError as e:
+
+        logger.exception(f"error{e}")
+
+        return None,"OpenAI error"
+
+
+
+
 
