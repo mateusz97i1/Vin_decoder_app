@@ -48,26 +48,40 @@ def openai_common_car_issues(request):
     ask chatgpt API about most common car issues
     """
 
-    #system promt message to AI
-    system_prompt =  "U are, a car ethusiasd, with given information tell me about 3 typical issues with this car model:"
+    # get car value
+    car_description = request.POST.get("typical_issues", "")
+    # get action button
+    action = request.POST.get("action")
+
+
+    #system promt message to AI related to each button
+    task_map = {
+        "common_issues": "tell me about 3 typical issues with this car model",
+        "price_range": "tell me the average price range for this car model in the current market",
+        "millage_range": "tell me the average mileage range at which major services are usually needed for this model"
+    }
+
+    # get selected task for button
+    selected_task = task_map.get(action)
+    if not selected_task or not car_description:
+        return render(request, 'partials/gpt_typical_issues_car.html', 
+                      {'message_error': "Invalid action"})
+    
 
     
-    car_description = request.POST.get("typical_issues", "")
+    # common system prompt
+    system_prompt = (
+        f"You are a car enthusiast. Based on the information provided, {selected_task}. "
+        "If this is a performance version (RS, M, etc.), you already know it by engine power. "
+        "Don't ask questions. JUST answer directly. NO QUESTIONS AT THE END."
+    )
 
-    #Check if our key is in post 
-    if not car_description:
 
-        return render(request, 'partials/gpt_typical_issues_car.html', {'message_error': "No data to analyze"})
-        
-    results_html , message_error = openai_prompt_basic(car_description, system_prompt)
-
-    #create message for user abt typical issues
-    message = f"The typical issues for {car_description} are as follows:"
+    results_html, message_error = openai_prompt_basic(car_description, system_prompt)
             
-        # Return onlyu partial from templates/partials/
+    # Return onlyu partial from templates/partials/
     return render(request, 'partials/gpt_typical_issues_car.html', 
                     context= {
-                    'message': message,
                     'results_html': results_html,
                     'message_error': message_error
                     })

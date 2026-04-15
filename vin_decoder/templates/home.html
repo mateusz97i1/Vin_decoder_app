@@ -88,8 +88,17 @@
                 <input type="hidden" name="typical_issues"
                     value="{{ car_info.Make }} {{ car_info.Model }} {{ car_info.ModelYear }} {{ car_info.DisplacementL }}Liter {{ car_info.EngineHP }} hp">
 
-                <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent">
-                    Check issues for {{ car_info.Make }} {{ car_info.Model }}
+                <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="common_issues"
+                    name="action">
+                    Check Common issues
+                </button>
+                <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="price_range"
+                    name="action">
+                    Check price range
+                </button>
+                <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="millage_range"
+                    name="action">
+                    Check millage range
                 </button>
             </form>
 
