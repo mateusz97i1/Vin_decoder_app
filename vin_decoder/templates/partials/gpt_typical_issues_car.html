@@ -1,6 +1,6 @@
 {% load static tailwind_tags %}
 {% load static %}
-
+<!-- yellow box with raport and message error if exist -->
 <div class="max-w-2xl mx-auto my-6 overflow-hidden bg-white border shadow-sm border-amber-100 rounded-xl">
     <div class="flex items-start gap-4 p-5 bg-amber-50/50">
         <div class="p-2 rounded-lg bg-amber-100 shrink-0">
@@ -21,7 +21,7 @@
 
 
             <h3 class="text-xs font-bold tracking-wider uppercase text-amber-800/80">
-                Common issues raport
+                Raport
             </h3>
 
             <div class="mt-3 text-sm leading-relaxed prose-sm prose text-gray-700 prose-amber max-w-none">
@@ -29,4 +29,17 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- save results as pdf file -->
+
+<div class="flex">
+    <form method="post" hx-boost="false">
+        {% csrf_token %}
+        <input type="hidden" name="typical_issues" value="{{ car_description }}">
+        <button type="submit" name="action" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="save_pdf">
+            Save Raport
+        </button>
+    </form>
+
 </div>
