@@ -85,6 +85,7 @@
             <form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response"
                 hx-swap="innerHTML">
                 {% csrf_token %}
+                <input type="hidden" name="vin" value="{{ vin }}">
                 <input type="hidden" name="typical_issues"
                     value="{{ car_info.Make }} {{ car_info.Model }} {{ car_info.ModelYear }} {{ car_info.DisplacementL }}Liter {{ car_info.EngineHP }} hp">
 

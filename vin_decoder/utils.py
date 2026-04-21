@@ -7,7 +7,7 @@ from xhtml2pdf import pisa
 logger = logging.getLogger(__name__)
 
 
-def generate_car_raport_pdf(html_content, car_name):
+def generate_car_raport_pdf(html_content):
     """Take generated raport in memory and save it as pdf using xhtml2pdf"""
 
     pisa.showLogging()

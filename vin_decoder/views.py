@@ -10,7 +10,7 @@ from .forms import InputVinForm
 from django.shortcuts import render , redirect
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from xhtml2pdf import pisa
-from django.http import HttpResponse
+from django.http import FileResponse
 from .utils import generate_car_raport_pdf
 
 #create logger
@@ -56,6 +56,7 @@ def openai_common_car_issues(request):
     car_description = request.POST.get("typical_issues", "")
     # get action button
     action = request.POST.get("action")
+    vin = request.POST.get("vin", "")
 
 
     #system promt message to AI related to each button
@@ -83,26 +84,33 @@ def openai_common_car_issues(request):
 
     results_html, message_error = openai_prompt_basic(car_description, system_prompt)
 
-    if action == "save_pdf":
-
-        print('KURWA KURWA KURWA KURWA KURWA KURWA')
-
             
     # Return onlyu partial from templates/partials/
     return render(request, 'partials/gpt_typical_issues_car.html', 
                     context= {
                     'results_html': results_html,
-                    'message_error': message_error
+                    'message_error': message_error,
+                    'vin': vin
                     })
 
 
 def export_vin_raport_pdf(request):
 
     action = request.POST.get('action')
+    results_html = request.POST.get('ai_analysis')
+    vin = request.POST.get('vin')
+
 
     if action == "save_pdf":
 
-        print('succes')
+        pdf_file = generate_car_raport_pdf(html_content= results_html)
 
-    return render(request, 'home.html')
+        return FileResponse(
+            pdf_file,
+            as_attachment= True,
+            filename=f"raport_VIN_{vin}.pdf",
+            content_type= "application/pdf"
+        )
+
+    return render(request, 'vin_decoder:home')
             
