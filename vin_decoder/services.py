@@ -75,10 +75,37 @@ def get_vehicle_data_vin(vin: str):
         return None, "Can't retrieve data"
 
 
-def openai_prompt_basic( car_description, system_prompt):
+def openai_prompt_basic( car_description, action):
     """
     ask chatgpt API about car with given information
     """
+    
+    if not action:
+
+        error_msg = "Action parameter is missing; cannot generate OpenAI prompt."
+
+        logger.exception(error_msg)
+
+        return None, error_msg
+
+    #system promt message to AI related to each button
+    task_map = {
+        "common_issues": "tell me about 3 typical issues with this car model",
+        "price_range": "tell me the average price range for this car model in the current market",
+        "millage_range": "tell me the average mileage range at which major services are usually needed for this model"
+    }
+
+    # get selected task for button
+    selected_task = task_map.get(action)
+
+    # common system prompt
+    system_prompt = (
+        f"You are a car enthusiast. Based on the information provided, {selected_task}. "
+        "If this is a performance version (RS, M, etc.), you already know it by engine power. "
+        "Don't ask questions. JUST answer directly. NO QUESTIONS AT THE END."
+    )
+
+    
 
     try:
         response = client.chat.completions.create(
