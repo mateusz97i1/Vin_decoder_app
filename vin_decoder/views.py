@@ -1,9 +1,7 @@
 import openai
-from django.views.decorators.http import require_POST, require_GET
 import os
 import requests
 import logging
-import markdown2
 import io
 
 from .forms import InputVinForm
@@ -12,11 +10,13 @@ from .services import get_vehicle_data_vin, openai_prompt_basic
 from xhtml2pdf import pisa
 from django.http import FileResponse
 from .utils import generate_car_raport_pdf
+from django.views.decorators.http import require_POST, require_GET
+
 
 #create logger
 logger = logging.getLogger(__name__)
 
-#focus rs vin number
+#bmw vin number
 test_vin = "WBA5U9C00LFJ37061"
 
 

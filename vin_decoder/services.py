@@ -1,12 +1,14 @@
 import requests
 import logging
 import os
-import openai
+import hashlib
 import markdown2
 
 from django.shortcuts import render
 from openai import OpenAIError
 from openai import OpenAI
+from django.core.cache import cache
+
 
 #We don't print in production
 logger = logging.getLogger(__name__)
@@ -73,6 +75,7 @@ def get_vehicle_data_vin(vin: str):
         
         logger.exception(f"error fetching Vin data{e}")
         return None, "Can't retrieve data"
+
 
 
 def openai_prompt_basic( car_description, action):
