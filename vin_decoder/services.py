@@ -2,7 +2,6 @@ import requests
 import logging
 import os
 import hashlib
-import markdown2
 
 from django.shortcuts import render
 from openai import OpenAIError
@@ -16,6 +15,8 @@ logger = logging.getLogger(__name__)
 #gpt model with api
 MODEL_GPT='gpt-5.4-mini'
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+PROMPT_VERSION = "v1.0"
+CACHE_TTL = 60 * 60 * 24 * 30 #30 days
 
 
 def get_vehicle_data_vin(vin: str):
@@ -33,6 +34,15 @@ def get_vehicle_data_vin(vin: str):
 
     if len(vin) != 17:
         return None, "Incorrect Vin number"
+
+    # caching logic for vin
+    cache_key = f"vin_cache{hashlib.sha256(vin.encode('utf-8')).hexdigest()[:16]}"
+
+    cached_data = cache.get(cache_key)
+
+    if cached_data:
+
+        return cached_data, None
 
 
     try:
@@ -62,6 +72,8 @@ def get_vehicle_data_vin(vin: str):
             logger.warning(f"NHTSA rejected VIN {vin}: {error_text}")
             return None, f"Invalid VIN data: {error_text}"
         
+        cache.set(cache_key, car_info, timeout= CACHE_TTL)
+        
         return car_info, None
         
         
@@ -78,6 +90,7 @@ def get_vehicle_data_vin(vin: str):
 
 
 
+
 def openai_prompt_basic( car_description, action):
     """
     ask chatgpt API about car with given information
@@ -90,6 +103,22 @@ def openai_prompt_basic( car_description, action):
         logger.exception(error_msg)
 
         return None, error_msg
+
+
+    # cachaing logic
+    clean_description = str(car_description).strip().lower()
+
+    # create sha256 unique code
+    hash_input= f"{PROMPT_VERSION}:{action}:{clean_description}"
+    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()[:16]}"
+
+    cached_data = cache.get(cache_key)
+
+    if cached_data:
+
+        return cached_data, None
+
+
 
     #system promt message to AI related to each button
     task_map = {
@@ -120,17 +149,17 @@ def openai_prompt_basic( car_description, action):
             timeout= 30
 
         )
+        # openAI reasults 
+        raw_results = response.choices[0].message.content
 
-        results = response.choices[0].message.content
+        #save in cache
+        cache.set(cache_key, raw_results, timeout= CACHE_TTL)
 
-        #markdown visual edit
-        results_html = markdown2.markdown(results, extras= ['break-on-newline'])
+        return raw_results, None
 
-        return results_html, None
+    except Exception as e:
 
-    except requests.exceptions.Timeout as e:
-
-        logger.exception(f"found timeout error{e}")
+        logger.exception(f"found timeout error for {car_description}: {e}")
 
         return None, "Try again later"
     

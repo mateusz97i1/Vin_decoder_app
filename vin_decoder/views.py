@@ -3,6 +3,7 @@ import os
 import requests
 import logging
 import io
+import markdown2
 
 from .forms import InputVinForm
 from django.shortcuts import render , redirect
@@ -65,7 +66,11 @@ def openai_common_car_issues(request):
 
 
     #get openAI response from servies,py
-    results_html, message_error = openai_prompt_basic(car_description, action)
+    raw_results, message_error = openai_prompt_basic(car_description, action)
+
+    #visual edit using markdown
+    results_html = markdown2.markdown(raw_results, extras= ['break-on-newline'])
+
 
             
     # Return onlyu partial from templates/partials/
