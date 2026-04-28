@@ -36,7 +36,7 @@ def get_vehicle_data_vin(vin: str):
         return None, "Incorrect Vin number"
 
     # caching logic for vin
-    cache_key = f"vin_cache{hashlib.sha256(vin.encode('utf-8')).hexdigest()[:16]}"
+    cache_key = f"vin_cache{vin}"
 
     cached_data = cache.get(cache_key)
 
@@ -110,7 +110,7 @@ def openai_prompt_basic( car_description, action):
 
     # create sha256 unique code
     hash_input= f"{PROMPT_VERSION}:{action}:{clean_description}"
-    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()[:16]}"
+    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
 
     cached_data = cache.get(cache_key)
 
