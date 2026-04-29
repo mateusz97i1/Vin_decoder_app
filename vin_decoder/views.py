@@ -12,7 +12,7 @@ from xhtml2pdf import pisa
 from django.http import FileResponse
 from .utils import generate_car_raport_pdf
 from django.views.decorators.http import require_POST, require_GET
-
+from django_ratelimit.decorators import ratelimit
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -20,17 +20,25 @@ logger = logging.getLogger(__name__)
 #bmw vin number
 test_vin = "WBA5U9C00LFJ37061"
 
-
+@ratelimit(key='ip', rate='3/m',  block= False)
 # @require_GET
 def home(request):
     """
     gets vehicle vin and gets it's info from NHTSA API
     """
-
+    was_limited = getattr(request, 'limited', False)
     car_info = None
     message_error = None
     vin = None
     form_vin =InputVinForm(request.GET or None)
+
+    # when rate limiter is hit
+    if was_limited:
+        message_error = "You have reached refresh limit, Pleas wait 1 min to try agian."
+        return render(request, 'home.html', context={
+            'message_error': message_error,
+            'form_vin': form_vin
+        })
 
     if form_vin.is_valid():
 
@@ -46,12 +54,19 @@ def home(request):
         })
 
 
-
+@ratelimit(key='ip', rate='2/m', block= False)
 @require_POST
 def openai_common_car_issues(request):
     """
     asks chatgpt API about most common car issues
     """
+    was_limited = getattr(request, 'limited', False)
+
+    if was_limited:
+        message_error = "You have reached refresh limit, Pleas wait 1 min to try agian."
+        return render(request, 'partials/gpt_typical_issues_car.html', context={
+            'message_error': message_error
+        })
 
     # get car value
     car_description = request.POST.get("typical_issues", "")
@@ -80,6 +95,7 @@ def openai_common_car_issues(request):
                     'message_error': message_error,
                     'vin': vin
                     })
+
 
 
 def export_vin_raport_pdf(request):

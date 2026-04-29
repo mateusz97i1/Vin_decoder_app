@@ -166,3 +166,11 @@ logging.basicConfig(
     format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     filemode= 'a' #Append mode
 )
+
+# sql cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
