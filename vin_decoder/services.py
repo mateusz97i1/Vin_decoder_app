@@ -91,7 +91,6 @@ def get_vehicle_data_vin(vin: str):
 
 
 
-
 def openai_prompt_basic( car_description, action):
     """
     ask chatgpt API about car with given information
@@ -147,7 +146,8 @@ def openai_prompt_basic( car_description, action):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": car_description},
         ],
-            timeout= 30
+            timeout= 30,
+            max_completion_tokens= 550
 
         )
         # openAI reasults 

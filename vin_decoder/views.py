@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 test_vin = "WBA5U9C00LFJ37061"
 
 @ratelimit(key='ip', rate='3/m',  block= False)
-# @require_GET
+@require_GET
 def home(request):
     """
     gets vehicle vin and gets it's info from NHTSA API
@@ -54,7 +54,7 @@ def home(request):
         })
 
 
-@ratelimit(key='ip', rate='2/m', block= False)
+@ratelimit(key='ip', rate='4/m', block= False)
 @require_POST
 def openai_common_car_issues(request):
     """
@@ -98,6 +98,7 @@ def openai_common_car_issues(request):
 
 
 
+@require_POST
 def export_vin_raport_pdf(request):
 
     """Generates pdf with AI generated raport"""
@@ -109,14 +110,23 @@ def export_vin_raport_pdf(request):
     #when button clicked generate pdf with raport and return it as response, otherwise return to home page
     if action == "save_pdf":
 
-        pdf_file = generate_car_raport_pdf(html_content= results_html)
+        try:
 
-        return FileResponse(
-            pdf_file,
-            as_attachment= True,
-            filename=f"raport_VIN_{vin}.pdf",
-            content_type= "application/pdf"
-        )
+            pdf_file = generate_car_raport_pdf(html_content= results_html)
+
+            return FileResponse(
+                pdf_file,
+                as_attachment= True,
+                filename=f"raport_VIN_{vin}.pdf",
+                content_type= "application/pdf"
+            )
+        
+        except Exception as e:
+
+            message_error = "Error during generating pdf."
+            logger.exception(f"Error during generating pdf {e}")
+
+            return render(request, 'vin_decoder:home', context={'message_error':message_error})
 
     return render(request, 'vin_decoder:home')
             
