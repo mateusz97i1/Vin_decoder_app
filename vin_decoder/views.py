@@ -12,7 +12,8 @@ from xhtml2pdf import pisa
 from django.http import FileResponse
 from .utils import generate_car_raport_pdf
 from django.views.decorators.http import require_POST, require_GET
-from django_ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit 
+from django.contrib.auth.decorators import login_required
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 #bmw vin number
 test_vin = "WBA5U9C00LFJ37061"
 
-@ratelimit(key='ip', rate='3/m',  block= False)
+@ratelimit(key='ip', rate='30/m',  block= False)
 @require_GET
 def home(request):
     """
@@ -54,6 +55,7 @@ def home(request):
         })
 
 
+@login_required
 @ratelimit(key='ip', rate='4/m', block= False)
 @require_POST
 def openai_common_car_issues(request):

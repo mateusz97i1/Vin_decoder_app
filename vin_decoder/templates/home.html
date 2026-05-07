@@ -1,5 +1,6 @@
 {% load static tailwind_tags %}
 {% load static %}
+{% load socialaccount %}
 
 <html lang="en">
 
@@ -79,6 +80,16 @@
 
 
             <p>Get info</p>
+
+            <!-- ALLAUTH LOGIC -->
+
+            {% if user.is_authenticated %}
+            <p>Witaj, {{ user.username }}!</p>
+            <a href="{% url 'account_logout' %}">Wyloguj się</a>
+            {% else %}
+            <a href="{% provider_login_url 'google' %}">Zaloguj przez Google</a>
+            <a href="{% url 'account_login' %}">Inne opcje logowania</a>
+            {% endif %}
 
             <!-- buttons for AI typical issues, price range and millage range -->
             <form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response"

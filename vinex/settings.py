@@ -25,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY =  os.getenv('SECRET_KEY')
+ALLAUTH_SECRET_KEY = os.getenv('ALLAUTH_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,8 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vin_decoder',
     "tailwind",
-    "theme",#tailwind app name
-    "django_htmx"
+    "theme",
+    #tailwind app name
+    "django_htmx",
+    #allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 if DEBUG:
@@ -64,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
+    # Allauth Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 if DEBUG:
@@ -88,6 +97,16 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+# Django allauth
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
 
 WSGI_APPLICATION = 'vinex.wsgi.application'
@@ -172,5 +191,40 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'my_cache_table',
+    }
+}
+
+# ALLAUTH SETUP
+SITE_ID = 1
+
+# --- Django-Allauth ---
+# 1. Metoda logowania - zostawiamy email
+ACCOUNT_LOGIN_METHODS = {"email"}
+
+# 2. Tu jest pies pogrzebany - musisz dodać GWIAZDKĘ przy email
+# To informuje allauth, że email jest absolutnie wymagany przy signup
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+# 3. Weryfikacja (skoro masz mandatory, email* powyżej jest obowiązkowy)
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# proceed automatically to google login
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# LOGINOUT URL
+LOGIN_URL = "account_login"
+LOGIN_REDIRECT_URL = "vin_decoder:home"
+LOGOUT_REDIRECT_URL = "vin_decoder:home"
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '808269081399-pttq7etho3ksiilhnqt8cjvl335au0sl.apps.googleusercontent.com',
+            'secret': ALLAUTH_SECRET_KEY,
+            'key': ''
+        }
     }
 }
