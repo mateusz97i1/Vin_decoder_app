@@ -194,21 +194,23 @@ CACHES = {
     }
 }
 
+
+
+# --- Django-Allauth ---
 # ALLAUTH SETUP
 SITE_ID = 1
 
-# --- Django-Allauth ---
-# 1. Metoda logowania - zostawiamy email
 ACCOUNT_LOGIN_METHODS = {"email"}
 
-# 2. Tu jest pies pogrzebany - musisz dodać GWIAZDKĘ przy email
-# To informuje allauth, że email jest absolutnie wymagany przy signup
+# email is manadatory for looging
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 
-# 3. Weryfikacja (skoro masz mandatory, email* powyżej jest obowiązkowy)
+#  email verification
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # proceed automatically to google login
-SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_LOGIN_ON_GET = False
 
 # LOGINOUT URL
 LOGIN_URL = "account_login"
@@ -228,3 +230,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+# Maile będą wypisywane w konsoli (terminalu), zamiast być wysyłane
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
