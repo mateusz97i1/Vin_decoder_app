@@ -23,6 +23,9 @@
 
 <body class="font-roboto">
     <div class="flex flex-col items-center justify-center bg-background min-h-svh">
+
+        {% block authentication %}
+
         <div class="container flex flex-col px-4 py-8 mx-auto text-center ">
             <h1 class="mb-4 text-4xl font-bold cursor-pointer"> <a href="{% url 'vin_decoder:home' %}">Welcome to
                     Vinex-USA
@@ -129,8 +132,9 @@
             {% endif %}
         </div>
 
-
+        {% endblock authentication %}
     </div>
+
 </body>
 
 </html>

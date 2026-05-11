@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    #cripsy forms
+    'crispy_forms',
+    "crispy_tailwind",
 ]
 
 if DEBUG:
@@ -196,7 +199,7 @@ CACHES = {
 
 
 
-# --- Django-Allauth ---
+# --- ---------------Django-Allauth ----------------------
 # ALLAUTH SETUP
 SITE_ID = 1
 
@@ -204,7 +207,6 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 
 # email is manadatory for looging
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 #  email verification
@@ -231,5 +233,9 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Maile będą wypisywane w konsoli (terminalu), zamiast być wysyłane
+# print mail content in console instead of using smtp and sending mails
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+#-----------------CRIPSY FORMS ------------------
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
