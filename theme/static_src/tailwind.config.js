@@ -40,6 +40,9 @@ module.exports = {
          * and make sure the pattern below matches your project structure.
          */
         // '../../**/*.py'
+
+        /* If you use crispy-forms with Tailwind CSS, include the following line to process crispy templates. */
+        './venv/lib/python3.x/site-packages/crispy_tailwind/**/*.html',
     ],
     theme: {
         extend: {
