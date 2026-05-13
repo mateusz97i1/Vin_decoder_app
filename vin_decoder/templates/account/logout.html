@@ -4,24 +4,32 @@
 {% load i18n %}
 {% load account socialaccount %}
 
+{# --- ACCOUNT DASHBOARD & LOGOUT CONFIRMATION VIEW --- #}
+{# This template handles the user profile overview, admin access links, and logout confirmation. #}
+{# Path: templates/account/logout.html (or similar) #}
 
 {% block authentication %}
 
+{# Branding Header #}
 <h1 class="mb-6 text-3xl font-bold text-gray-800">
     <a href="{% url 'vin_decoder:home' %}">Vinex-USA</a>
 </h1>
 
 <div class="flex flex-col items-center justify-center min-h-screen px-4 my-8">
 
+    {# Main Profile Card #}
     <div class="w-full max-w-lg overflow-hidden bg-white border border-gray-100 shadow-2xl rounded-3xl">
 
+        {# Header Section: User Identity & Avatar #}
         <div class="p-8 text-center border-b border-gray-100 bg-gray-50">
             <div class="flex justify-center mb-4">
+                {# Fetch social account data (Google) for profile picture #}
                 {% get_social_accounts user as accounts %}
                 {% if accounts %}
                 <img src="{{ accounts.google.0.get_avatar_url }}"
                     class="w-20 h-20 border-4 border-white rounded-full shadow-md shadow-gray-200" alt="Avatar">
                 {% else %}
+                {# Placeholder fallback if no social avatar exists #}
                 <div
                     class="flex items-center justify-center w-20 h-20 bg-gray-200 border-4 border-white rounded-full shadow-md">
                     <span class="text-3xl font-bold text-gray-500">{{ user.username|first|upper }}</span>
@@ -37,9 +45,18 @@
             {% endif %}
         </div>
 
+        {# Action Section: Password Management and Admin Access #}
         <div class="p-8">
             <div class="flex flex-col gap-4">
 
+                <a href="{% url 'account_change_password'  %}"
+                    class="w-full py-4 font-bold text-center text-white transition-all bg-black shadow-lg rounded-xl shadow-red-100">Change
+                    Password</a>
+                <a href="{% url 'account_reset_password'  %}"
+                    class="w-full py-4 font-bold text-center text-white transition-all bg-black shadow-lg rounded-xl shadow-red-100">Reset
+                    Password</a>
+
+                {# Conditional Rendering: Staff Dashboard Access #}
                 {% if user.is_staff and not user.is_superuser %}
                 <a href="{% url 'admin:index' %}"
                     class="flex items-center justify-center w-full gap-2 py-3 font-bold text-white transition-all bg-black rounded-xl hover:bg-gray-800">
@@ -52,6 +69,7 @@
                 </a>
                 {% endif %}
 
+                {# Conditional Rendering: Superuser Dashboard Access #}
                 {% if user.is_superuser %}
                 <a href="{% url 'admin:index' %}"
                     class="flex items-center justify-center w-full gap-2 py-3 font-bold text-white transition-all bg-black rounded-xl hover:bg-gray-800">
@@ -64,7 +82,9 @@
                 </a>
                 {% endif %}
 
+                {# Sign Out Section: Handled via POST for security #}
                 <div class="text-center">
+                    <hr class="my-6 border-gray-100">
                     <h3 class="text-lg font-bold text-gray-900">Sign Out</h3>
                     <p class="mb-6 text-sm text-gray-500">Are you sure you want to leave?</p>
 
