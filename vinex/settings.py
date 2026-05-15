@@ -239,3 +239,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 #-----------------CRIPSY FORMS ------------------
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
+
+# CELERY
