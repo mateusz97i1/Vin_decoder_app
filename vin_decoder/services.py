@@ -2,6 +2,7 @@ import requests
 import logging
 import os
 import hashlib
+import redis
 
 from django.shortcuts import render
 from openai import OpenAIError

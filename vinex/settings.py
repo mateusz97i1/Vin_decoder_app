@@ -76,6 +76,9 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     # Allauth Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
+    #redis
+    "django.middleware.cache.FetchFromCacheMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
 ]
 
 if DEBUG:
@@ -189,15 +192,6 @@ logging.basicConfig(
     filemode= 'a' #Append mode
 )
 
-# sql cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
-
-
 
 # --- ---------------Django-Allauth ----------------------
 # ALLAUTH SETUP
@@ -240,4 +234,23 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
-# CELERY
+# ------------------REDIS-------------------
+REDIS_HOST=os.getenv('REDIS_HOST')
+REDIS_PASSWORD=os.getenv('REDIS_PASSWORD')
+REDIS_PORT=os.getenv('REDIS_PORT')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 50,
+        },
+        'KEY_PREFIX': 'vin_decoder_app',
+        'TIMEOUT': 300,  # 5 minutes default
+    }
+}
