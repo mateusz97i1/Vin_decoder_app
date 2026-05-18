@@ -4,6 +4,7 @@ import requests
 import logging
 import io
 import markdown2
+import hashlib
 
 from .forms import InputVinForm
 from django.shortcuts import render , redirect
@@ -14,6 +15,7 @@ from .utils import generate_car_raport_pdf
 from django.views.decorators.http import require_POST, require_GET
 from django_ratelimit.decorators import ratelimit 
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -83,7 +85,7 @@ def openai_common_car_issues(request):
 
 
     #get openAI response from servies,py
-    raw_results, message_error = openai_prompt_basic(car_description, action)
+    raw_results, message_error = openai_prompt_basic(car_description, action, vin)
 
     #visual edit using markdown
     results_html = markdown2.markdown(raw_results, extras= ['break-on-newline'])
@@ -108,13 +110,19 @@ def export_vin_raport_pdf(request):
     action = request.POST.get('action')
     results_html = request.POST.get('ai_analysis')#AI generated raport
     vin = request.POST.get('vin')
+    clean_vin = str(vin).strip().lower()
+    PROMPT_VERSION = "v1.0"
+    # create sha256 unique code
+    hash_input= f"{PROMPT_VERSION}:{clean_vin}"
+    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
+    get_car_info_from_REDIS_cache = cache.get(cache_key)
 
     #when button clicked generate pdf with raport and return it as response, otherwise return to home page
     if action == "save_pdf":
 
         try:
 
-            pdf_file = generate_car_raport_pdf(html_content= results_html)
+            pdf_file = generate_car_raport_pdf(html_content= get_car_info_from_REDIS_cache)
 
             return FileResponse(
                 pdf_file,

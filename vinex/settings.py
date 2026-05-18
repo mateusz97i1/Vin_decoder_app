@@ -242,7 +242,7 @@ REDIS_PORT=os.getenv('REDIS_PORT')
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}",
+        "LOCATION": f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             'SOCKET_CONNECT_TIMEOUT': 5,

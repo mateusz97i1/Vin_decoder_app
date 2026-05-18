@@ -92,12 +92,12 @@ def get_vehicle_data_vin(vin: str):
 
 
 
-def openai_prompt_basic( car_description, action):
+def openai_prompt_basic( car_description, action, vin):
     """
     ask chatgpt API about car with given information
     """
     
-    if not action:
+    if not action :
 
         error_msg = "Action parameter is missing; cannot generate OpenAI prompt."
 
@@ -107,10 +107,10 @@ def openai_prompt_basic( car_description, action):
 
 
     # cachaing logic
-    clean_description = str(car_description).strip().lower()
+    clean_vin = str(vin).strip().lower()
 
     # create sha256 unique code
-    hash_input= f"{PROMPT_VERSION}:{action}:{clean_description}"
+    hash_input= f"{PROMPT_VERSION}:{clean_vin}"
     cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
 
     cached_data = cache.get(cache_key)
@@ -128,12 +128,9 @@ def openai_prompt_basic( car_description, action):
         "millage_range": "tell me the average mileage range at which major services are usually needed for this model"
     }
 
-    # get selected task for button
-    selected_task = task_map.get(action)
-
     # common system prompt
     system_prompt = (
-        f"You are a car enthusiast. Based on the information provided, {selected_task}. "
+        f"You are a car enthusiast. Based on the information provided, {task_map}. Generate raport "
         "If this is a performance version (RS, M, etc.), you already know it by engine power. "
         "Don't ask questions. JUST answer directly. NO QUESTIONS AT THE END."
     )
@@ -148,7 +145,7 @@ def openai_prompt_basic( car_description, action):
             {"role": "user", "content": car_description},
         ],
             timeout= 30,
-            max_completion_tokens= 550
+            max_completion_tokens= 850
 
         )
         # openAI reasults 
