@@ -11,7 +11,7 @@ from django.shortcuts import render , redirect
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from xhtml2pdf import pisa
 from django.http import FileResponse
-from .utils import generate_car_raport_pdf
+from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from django.views.decorators.http import require_POST, require_GET
 from django_ratelimit.decorators import ratelimit 
 from django.contrib.auth.decorators import login_required
@@ -105,17 +105,17 @@ def openai_common_car_issues(request):
 @require_POST
 def export_vin_raport_pdf(request):
 
-    """Generates pdf with AI generated raport"""
+    """Generates pdf with AI generated raport. Data is from redis cache"""
 
     action = request.POST.get('action')
-    results_html = request.POST.get('ai_analysis')#AI generated raport
     vin = request.POST.get('vin')
-    clean_vin = str(vin).strip().lower()
-    PROMPT_VERSION = "v1.0"
-    # create sha256 unique code
-    hash_input= f"{PROMPT_VERSION}:{clean_vin}"
-    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
-    get_car_info_from_REDIS_cache = cache.get(cache_key)
+
+    if not vin:
+
+        logger.error("Can't get VIN")
+
+    #get raport from cache
+    get_car_info_from_REDIS_cache = get_raport_data_from_redis(vin)
 
     #when button clicked generate pdf with raport and return it as response, otherwise return to home page
     if action == "save_pdf":

@@ -254,3 +254,11 @@ CACHES = {
         'TIMEOUT': 300,  # 5 minutes default
     }
 }
+
+
+# -----------------OPEN AI CONSTANTS--------------
+
+PROMPT_VERSION = "v1.0"
+CACHE_TTL = 60 * 60 * 24 * 30 #30 days
+#gpt model with api
+MODEL_GPT='gpt-5.4-mini'

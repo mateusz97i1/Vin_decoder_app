@@ -1,7 +1,10 @@
 import io
 import logging
+import hashlib
 
 from xhtml2pdf import pisa
+from django.core.cache import cache
+from django.conf import settings
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -29,3 +32,29 @@ def generate_car_raport_pdf(html_content):
 
     # return file with according name, file extension (forces download in web browser) 
     return output
+
+
+def get_raport_data_from_redis(vin):
+    #AI model version
+    prompt_version = settings.PROMPT_VERSION
+
+    if not vin:
+
+        logger.error("Can't get VIN")
+
+    clean_vin = str(vin).strip().upper()
+
+    # create sha256 unique code
+    hash_input= f"{prompt_version}:{clean_vin}"
+    cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
+
+    try:
+
+        cached_data = cache.get(cache_key)
+
+    except Exception as e:
+
+        logging.error(f"Error getting cached data {e}")
+
+
+    return cached_data

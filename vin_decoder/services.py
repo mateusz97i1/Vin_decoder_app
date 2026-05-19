@@ -8,17 +8,15 @@ from django.shortcuts import render
 from openai import OpenAIError
 from openai import OpenAI
 from django.core.cache import cache
+from django.conf import settings
 
 
 
 #We don't print in production
 logger = logging.getLogger(__name__)
 
-#gpt model with api
-MODEL_GPT='gpt-5.4-mini'
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-PROMPT_VERSION = "v1.0"
-CACHE_TTL = 60 * 60 * 24 * 30 #30 days
+
 
 
 def get_vehicle_data_vin(vin: str):
@@ -28,6 +26,9 @@ def get_vehicle_data_vin(vin: str):
     """
     if not vin:
         return None, "Please provide a VIN number"
+
+    #get mandatory settings
+    cache_ttl = settings.CACHE_TTL
     
     vin = vin.strip().upper()  # Ensure VIN is in the correct format
     url= os.getenv('NHTSA_API_URL') + vin
@@ -74,7 +75,7 @@ def get_vehicle_data_vin(vin: str):
             logger.warning(f"NHTSA rejected VIN {vin}: {error_text}")
             return None, f"Invalid VIN data: {error_text}"
         
-        cache.set(cache_key, car_info, timeout= CACHE_TTL)
+        cache.set(cache_key, car_info, timeout= cache_ttl)
         
         return car_info, None
         
@@ -96,10 +97,15 @@ def openai_prompt_basic( car_description, action, vin):
     """
     ask chatgpt API about car with given information
     """
+    #get mandatory settings
+    prompt_version = settings.PROMPT_VERSION
+    model_gpt = settings.MODEL_GPT
+    cache_ttl = settings.CACHE_TTL
     
-    if not action :
+    
+    if not action or not vin :
 
-        error_msg = "Action parameter is missing; cannot generate OpenAI prompt."
+        error_msg = "Action or VIN parameter is missing; cannot generate OpenAI prompt."
 
         logger.exception(error_msg)
 
@@ -107,10 +113,10 @@ def openai_prompt_basic( car_description, action, vin):
 
 
     # cachaing logic
-    clean_vin = str(vin).strip().lower()
+    clean_vin = str(vin).strip().upper()
 
     # create sha256 unique code
-    hash_input= f"{PROMPT_VERSION}:{clean_vin}"
+    hash_input= f"{prompt_version}:{clean_vin}"
     cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
 
     cached_data = cache.get(cache_key)
@@ -139,7 +145,7 @@ def openai_prompt_basic( car_description, action, vin):
 
     try:
         response = client.chat.completions.create(
-            model = MODEL_GPT,
+            model = model_gpt,
             messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": car_description},
@@ -152,7 +158,7 @@ def openai_prompt_basic( car_description, action, vin):
         raw_results = response.choices[0].message.content
 
         #save in cache
-        cache.set(cache_key, raw_results, timeout= CACHE_TTL)
+        cache.set(cache_key, raw_results, timeout= cache_ttl)
 
         return raw_results, None
 
