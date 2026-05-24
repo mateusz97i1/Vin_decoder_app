@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST, require_GET
 from django_ratelimit.decorators import ratelimit 
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.template.loader import render_to_string
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -111,18 +112,34 @@ def export_vin_raport_pdf(request):
     vin = request.POST.get('vin')
 
     if not vin:
-
         logger.error("Can't get VIN")
 
+        return redirect('vin_decoder:home')
+
     #get raport from cache
-    get_car_info_from_REDIS_cache = get_raport_data_from_redis(vin)
+    raw_info_data = get_raport_data_from_redis(vin)
+
+    if not raw_info_data:
+        logger.error(f"Cache miss for vin{vin}")
+
+        return redirect('vin_decoder:home')
+
 
     #when button clicked generate pdf with raport and return it as response, otherwise return to home page
     if action == "save_pdf":
 
         try:
 
-            pdf_file = generate_car_raport_pdf(html_content= get_car_info_from_REDIS_cache)
+             #visual edit using markdown
+            car_info_data = markdown2.markdown(raw_info_data, extras= ['break-on-newline'])
+
+            #use html template to generate pdf file  
+            html_string = render_to_string('pdf_render/car_raport_pdf.html', context={
+                'raport_html': car_info_data,
+                'vin': vin
+            })
+
+            pdf_file = generate_car_raport_pdf(html_content= html_string)
 
             return FileResponse(
                 pdf_file,
@@ -136,7 +153,7 @@ def export_vin_raport_pdf(request):
             message_error = "Error during generating pdf."
             logger.exception(f"Error during generating pdf {e}")
 
-            return render(request, 'vin_decoder:home', context={'message_error':message_error})
+            return render(request, 'home.html', context={'message_error':message_error})
 
-    return render(request, 'vin_decoder:home')
+    return render(request, 'home.html')
             

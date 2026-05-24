@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Margins */
+        @page {
+            size: a4 portrait;
+            margin-top: 2.5cm;
+            margin-bottom: 2.5cm;
+            margin-left: 2cm;
+            margin-right: 2cm;
+        }
+
+        /* main background styles */
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #2D3748;
+            line-height: 1.6;
+            font-size: 11pt;
+            background-color: #FFFFFF;
+        }
+
+        /* Top infoprmation panel */
+        .header {
+            border-bottom: 3px solid #2B6CB0;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #2B6CB0;
+            font-size: 22pt;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .vin-badge {
+            background-color: #EBF8FF;
+            border-left: 4px solid #3182CE;
+            padding: 6px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12pt;
+            font-weight: bold;
+            color: #2B6CB0;
+            margin-top: 8px;
+            width: 320px;
+        }
+
+        /* AI generated content */
+        .content {
+            text-align: justify;
+        }
+
+        /*markdown headres 3 typical issues */
+        .content h1,
+        .content h2,
+        .content h3 {
+            color: #2D3748;
+            font-weight: bold;
+            margin-top: 22px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 4px;
+        }
+
+        .content h1 {
+            font-size: 16pt;
+            color: #2B6CB0;
+        }
+
+        .content h2 {
+            font-size: 14pt;
+        }
+
+        .content h3 {
+            font-size: 12pt;
+            color: #4A5568;
+        }
+
+        /* paragraph */
+        .content p {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #2D3748;
+        }
+
+        .content strong {
+            color: #1A202C;
+            font-weight: bold;
+        }
+
+        .content ul,
+        .content ol {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        .content li {
+            margin-bottom: 6px;
+            color: #2D3748;
+        }
+
+        /*  "Quick enthusiast note" */
+        .content blockquote {
+            background-color: #F7FAFC;
+            border-left: 4px solid #CBD5E0;
+            margin: 15px 0;
+            padding: 10px 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Car Raport</h1>
+        <div class="vin-badge">Vin number: {{ vin }}</div>
+    </div>
+
+    <!-- REDIS DATA -->
+    <div class="content">
+        {{ raport_html|safe }}
+    </div>
+
+</body>
+
+</html>

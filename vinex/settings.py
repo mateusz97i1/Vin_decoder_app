@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     #cripsy forms
     'crispy_forms',
     "crispy_tailwind",
+    #supabase
+    'supabase_storage',
 ]
 
 if DEBUG:
@@ -256,7 +258,7 @@ CACHES = {
 }
 
 
-# -----------------OPEN AI CONSTANTS--------------
+# -----------------OPEN AI CONSTANTS CONFIG--------------
 
 PROMPT_VERSION = "v1.0"
 CACHE_TTL = 60 * 60 * 24 * 30 #30 days
