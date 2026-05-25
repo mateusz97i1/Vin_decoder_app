@@ -55,8 +55,6 @@ INSTALLED_APPS = [
     #cripsy forms
     'crispy_forms',
     "crispy_tailwind",
-    #supabase
-    'supabase_storage',
 ]
 
 if DEBUG:
@@ -264,3 +262,19 @@ PROMPT_VERSION = "v1.0"
 CACHE_TTL = 60 * 60 * 24 * 30 #30 days
 #gpt model with api
 MODEL_GPT='gpt-5.4-mini'
+
+
+#-----------------SUPABASE----------------------
+
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET_NAME")
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django_supabase_storage.SupabaseMediaStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django_supabase_storage.SupabaseStaticStorage',
+    },
+}
