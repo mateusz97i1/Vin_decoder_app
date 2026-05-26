@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vin_decoder',
     "tailwind",
-    "theme",
+    'theme',
     #tailwind app name
     "django_htmx",
     #allauth
@@ -66,6 +66,7 @@ if DEBUG:
 
 
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,8 +78,8 @@ MIDDLEWARE = [
     # Allauth Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
     #redis
-    "django.middleware.cache.FetchFromCacheMiddleware",
-    "django.middleware.cache.UpdateCacheMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
 ]
 
 if DEBUG:
@@ -259,7 +260,7 @@ CACHES = {
 # -----------------OPEN AI CONSTANTS CONFIG--------------
 
 PROMPT_VERSION = "v1.0"
-CACHE_TTL = 60 * 60 * 24 * 30 #30 days
+CACHE_TTL = 60 * 60 * 24  #24h
 #gpt model with api
 MODEL_GPT='gpt-5.4-mini'
 
@@ -268,13 +269,13 @@ MODEL_GPT='gpt-5.4-mini'
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')
-SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET_NAME")
+SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
 
 STORAGES = {
     'default': {
         'BACKEND': 'django_supabase_storage.SupabaseMediaStorage',
     },
     'staticfiles': {
-        'BACKEND': 'django_supabase_storage.SupabaseStaticStorage',
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
     },
 }

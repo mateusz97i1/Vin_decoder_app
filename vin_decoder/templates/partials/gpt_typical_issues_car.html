@@ -38,7 +38,7 @@
         <form method="post" action="{% url 'vin_decoder:export_pdf' %}">
             {% csrf_token %}
             <input type="hidden" name="vin" value="{{ vin }}">
-
+            <input type="hidden" name="car_description" value="{{ car_description }}">
             <input type="hidden" name="ai_analysis" value="{{ results_html }}">
             <button type="submit" name="action" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="save_pdf">
                 Save Raport-home html

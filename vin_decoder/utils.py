@@ -36,18 +36,18 @@ def generate_car_raport_pdf(html_content):
 
 
 
-def get_raport_data_from_redis(vin):
+def get_raport_data_from_redis(car_description):
     #AI model version
     prompt_version = settings.PROMPT_VERSION
 
-    if not vin:
+    if not car_description:
 
-        logger.error("Can't get VIN")
+        logger.error(f"Can't get Car description {car_description}")
 
-    clean_vin = str(vin).strip().upper()
+    clean_car_description = str(car_description).strip().upper()
 
     # create sha256 unique code
-    hash_input= f"{prompt_version}:{clean_vin}"
+    hash_input= f"{prompt_version}:{clean_car_description}"
     cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
 
     try:

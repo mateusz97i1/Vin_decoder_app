@@ -59,7 +59,7 @@ def home(request):
 
 
 @login_required
-@ratelimit(key='ip', rate='8/m', block= False)
+@ratelimit(key='ip', rate='3/m', block= False)
 @require_POST
 def openai_common_car_issues(request):
     """
@@ -74,7 +74,7 @@ def openai_common_car_issues(request):
         })
 
     # get car value
-    car_description = request.POST.get("typical_issues", "")
+    car_description = request.POST.get("car_description", "")
     # get action button
     action = request.POST.get("action")
     vin = request.POST.get("vin", "")
@@ -86,7 +86,7 @@ def openai_common_car_issues(request):
 
 
     #get openAI response from servies,py
-    raw_results, message_error = openai_prompt_basic(car_description, action, vin)
+    raw_results, message_error = openai_prompt_basic(car_description)
 
     #visual edit using markdown
     results_html = markdown2.markdown(raw_results, extras= ['break-on-newline'])
@@ -98,7 +98,8 @@ def openai_common_car_issues(request):
                     context= {
                     'results_html': results_html,
                     'message_error': message_error,
-                    'vin': vin
+                    'vin': vin,
+                    'car_description':car_description,
                     })
 
 
@@ -110,6 +111,7 @@ def export_vin_raport_pdf(request):
 
     action = request.POST.get('action')
     vin = request.POST.get('vin')
+    car_description = request.POST.get('car_description')
 
     if not vin:
         logger.error("Can't get VIN")
@@ -117,10 +119,10 @@ def export_vin_raport_pdf(request):
         return redirect('vin_decoder:home')
 
     #get raport from cache
-    raw_info_data = get_raport_data_from_redis(vin)
+    raw_info_data = get_raport_data_from_redis(car_description)
 
     if not raw_info_data:
-        logger.error(f"Cache miss for vin{vin}")
+        logger.error(f"Cache miss for data: {car_description}")
 
         return redirect('vin_decoder:home')
 

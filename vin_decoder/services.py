@@ -93,7 +93,7 @@ def get_vehicle_data_vin(vin: str):
 
 
 
-def openai_prompt_basic( car_description, action, vin):
+def openai_prompt_basic( car_description):
     """
     ask chatgpt API about car with given information
     """
@@ -103,9 +103,9 @@ def openai_prompt_basic( car_description, action, vin):
     cache_ttl = settings.CACHE_TTL
     
     
-    if not action or not vin :
+    if not car_description :
 
-        error_msg = "Action or VIN parameter is missing; cannot generate OpenAI prompt."
+        error_msg = "Car description parameter is missing; cannot generate OpenAI prompt."
 
         logger.exception(error_msg)
 
@@ -113,10 +113,10 @@ def openai_prompt_basic( car_description, action, vin):
 
 
     # cachaing logic
-    clean_vin = str(vin).strip().upper()
+    clean_car_description = str(car_description).strip().upper()
 
     # create sha256 unique code
-    hash_input= f"{prompt_version}:{clean_vin}"
+    hash_input= f"{prompt_version}:{clean_car_description}"
     cache_key = f"call_llm{hashlib.sha256(hash_input.encode('utf-8')).hexdigest()}"
 
     cached_data = cache.get(cache_key)
@@ -124,21 +124,16 @@ def openai_prompt_basic( car_description, action, vin):
     if cached_data:
 
         return cached_data, None
-
-
-
-    #system promt message to AI related to each button
-    task_map = {
-        "common_issues": "tell me about 3 typical issues with this car model",
-        "price_range": "tell me the average price range for this car model in the current market",
-        "millage_range": "tell me the average mileage range at which major services are usually needed for this model"
-    }
+    
 
     # common system prompt
     system_prompt = (
-        f"You are a car enthusiast. Based on the information provided, {task_map}. Generate raport "
-        "If this is a performance version (RS, M, etc.), you already know it by engine power. "
-        "Don't ask questions. JUST answer directly. NO QUESTIONS AT THE END."
+        "You are a car enthusiast. Based on the information provided, generate a comprehensive report including:\n"
+        "1. 3 typical issues with this car model.\n"
+        "2. The average price range for this car model in the current market.\n"
+        "3. The average mileage range at which major services are usually needed for this model.\n"
+        "If this is a performance version (RS, M, etc.), you already know it by engine power. Don't tell that indicates on that or this specific model "
+        "Don't ask questions. Don't suggest anything at the end of the raport. JUST answer directly. NO QUESTIONS AT THE END."
     )
 
     

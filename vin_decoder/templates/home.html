@@ -27,7 +27,7 @@
         {% block authentication %}
 
         <div class="container flex flex-col px-4 py-8 mx-auto text-center ">
-            <h1 class="mb-4 text-4xl font-bold cursor-pointer"> <a href="{% url 'vin_decoder:home' %}">Welcome to
+            <h1 class="mb-4 text-2xl font-bold cursor-pointer"> <a href="{% url 'vin_decoder:home' %}">Welcome to
                     Vinex-USA
                     car VIN decoder</a></h1>
             <p>We are a team of car enthusiasts dedicated to providing you with the best VIN decoding experience.</p>
@@ -103,7 +103,7 @@
                 hx-swap="innerHTML">
                 {% csrf_token %}
                 <input type="hidden" name="vin" value="{{ vin }}">
-                <input type="hidden" name="typical_issues"
+                <input type="hidden" name="car_description"
                     value="{{ car_info.Make }} {{ car_info.Model }} {{ car_info.ModelYear }} {{ car_info.DisplacementL }}Liter {{ car_info.EngineHP }} hp">
 
                 <button type="submit" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="full_raport"
