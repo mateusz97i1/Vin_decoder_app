@@ -279,3 +279,23 @@ STORAGES = {
         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
     },
 }
+
+
+
+#------------------CELERY-------------------------
+
+# Celery Configuration
+CELERY_BROKER_URL = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/1"
+CELERY_RESULT_BACKEND = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/2"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Task result expiration
+CELERY_RESULT_EXPIRES = 60 * 60  # 1 hour
+
+# Rate limiting
+CELERY_TASK_ANNOTATIONS = {
+    'vin_decoder.tasks.generate_pdf': {'rate_limit': '10/m'},
+}
