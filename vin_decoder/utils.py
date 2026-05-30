@@ -27,6 +27,7 @@ def generate_car_raport_pdf(html_content):
 
     if pisa_status.err:
         logger.error(f"Error saving PDF: {pisa_status.err}")
+        return None
 
     # set cursor in memory at the beggining
     output.seek(0)
@@ -43,6 +44,7 @@ def get_raport_data_from_redis(car_description):
     if not car_description:
 
         logger.error(f"Can't get Car description {car_description}")
+        return None
 
     clean_car_description = str(car_description).strip().upper()
 
@@ -56,7 +58,8 @@ def get_raport_data_from_redis(car_description):
 
     except Exception as e:
 
-        logging.error(f"Error getting cached data {e}")
+        logger.error(f"Error getting cached data {e}")
+        return None
 
 
     return cached_data

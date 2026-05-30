@@ -285,8 +285,8 @@ STORAGES = {
 #------------------CELERY-------------------------
 
 # Celery Configuration
-CELERY_BROKER_URL = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/1"
-CELERY_RESULT_BACKEND = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/2"
+CELERY_BROKER_URL = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/0"
+CELERY_RESULT_BACKEND = f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}/0"
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

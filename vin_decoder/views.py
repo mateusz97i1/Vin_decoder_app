@@ -6,17 +6,20 @@ import io
 import markdown2
 import hashlib
 
-from .forms import InputVinForm
+
 from django.shortcuts import render , redirect
-from .services import get_vehicle_data_vin, openai_prompt_basic
 from xhtml2pdf import pisa
 from django.http import FileResponse
-from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from django.views.decorators.http import require_POST, require_GET
 from django_ratelimit.decorators import ratelimit 
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.template.loader import render_to_string
+
+
+from .forms import InputVinForm
+from .utils import generate_car_raport_pdf, get_raport_data_from_redis
+from .services import get_vehicle_data_vin, openai_prompt_basic
 
 #create logger
 logger = logging.getLogger(__name__)
