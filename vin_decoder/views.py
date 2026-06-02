@@ -110,7 +110,7 @@ def openai_common_car_issues(request):
 @require_POST
 def export_vin_raport_pdf(request):
 
-    """Generates pdf with AI generated raport. Data is from redis cache"""
+    """Generates pdf with AI generated raport. Data comes from supabase bucket"""
 
     action = request.POST.get('action')
     vin = request.POST.get('vin')
@@ -130,7 +130,7 @@ def export_vin_raport_pdf(request):
         return redirect('vin_decoder:home')
 
 
-    #when button clicked generate pdf with raport and return it as response, otherwise return to home page
+    # button: generates pdf raport and returns it as response, otherwise return to home page
     if action == "save_pdf":
 
         try:
