@@ -297,5 +297,5 @@ CELERY_RESULT_EXPIRES = 60 * 60  # 1 hour
 
 # Rate limiting
 CELERY_TASK_ANNOTATIONS = {
-    'vin_decoder.tasks.generate_pdf': {'rate_limit': '10/m'},
+    'vin_decoder.tasks.generate_pdf_task': {'rate_limit': '10/m'},
 }

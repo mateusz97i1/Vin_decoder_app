@@ -15,11 +15,13 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.template.loader import render_to_string
+from celery.result import AsyncResult
 
 
 from .forms import InputVinForm
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from .services import get_vehicle_data_vin, openai_prompt_basic
+from .tasks import generate_pdf_task
 
 #create logger
 logger = logging.getLogger(__name__)
@@ -107,10 +109,65 @@ def openai_common_car_issues(request):
 
 
 
+# @require_POST
+# def export_vin_raport_pdf(request):
+
+#     """Generates pdf with AI generated raport. Data comes from supabase bucket"""
+
+#     action = request.POST.get('action')
+#     vin = request.POST.get('vin')
+#     car_description = request.POST.get('car_description')
+
+#     if not vin:
+#         logger.error("Can't get VIN")
+
+#         return redirect('vin_decoder:home')
+
+#     #get raport from cache
+#     raw_info_data = get_raport_data_from_redis(car_description)
+
+#     if not raw_info_data:
+#         logger.error(f"Cache miss for data: {car_description}")
+
+#         return redirect('vin_decoder:home')
+
+
+#     # button: generates pdf raport and returns it as response, otherwise return to home page
+#     if action == "save_pdf":
+
+#         try:
+
+#              #visual edit using markdown
+#             car_info_data = markdown2.markdown(raw_info_data, extras= ['break-on-newline'])
+
+#             #use html template to generate pdf file  
+#             html_string = render_to_string('pdf_render/car_raport_pdf.html', context={
+#                 'raport_html': car_info_data,
+#                 'vin': vin
+#             })
+
+#             pdf_file = generate_car_raport_pdf(html_content= html_string)
+
+#             return FileResponse(
+#                 pdf_file,
+#                 as_attachment= True,
+#                 filename=f"raport_VIN_{vin}.pdf",
+#                 content_type= "application/pdf"
+#             )
+        
+#         except Exception as e:
+
+#             message_error = "Error during generating pdf."
+#             logger.exception(f"Error during generating pdf {e}")
+
+#             return render(request, 'home.html', context={'message_error':message_error})
+
+#     return render(request, 'home.html')
+            
 @require_POST
 def export_vin_raport_pdf(request):
 
-    """Generates pdf with AI generated raport. Data is from redis cache"""
+    """Generates pdf with AI generated raport. Data comes from supabase bucket"""
 
     action = request.POST.get('action')
     vin = request.POST.get('vin')
@@ -121,37 +178,13 @@ def export_vin_raport_pdf(request):
 
         return redirect('vin_decoder:home')
 
-    #get raport from cache
-    raw_info_data = get_raport_data_from_redis(car_description)
 
-    if not raw_info_data:
-        logger.error(f"Cache miss for data: {car_description}")
-
-        return redirect('vin_decoder:home')
-
-
-    #when button clicked generate pdf with raport and return it as response, otherwise return to home page
+    # button: generates pdf raport and returns it as response, otherwise return to home page
     if action == "save_pdf":
 
         try:
 
-             #visual edit using markdown
-            car_info_data = markdown2.markdown(raw_info_data, extras= ['break-on-newline'])
-
-            #use html template to generate pdf file  
-            html_string = render_to_string('pdf_render/car_raport_pdf.html', context={
-                'raport_html': car_info_data,
-                'vin': vin
-            })
-
-            pdf_file = generate_car_raport_pdf(html_content= html_string)
-
-            return FileResponse(
-                pdf_file,
-                as_attachment= True,
-                filename=f"raport_VIN_{vin}.pdf",
-                content_type= "application/pdf"
-            )
+            generate_pdf_task.delay(vin,car_description)
         
         except Exception as e:
 
@@ -161,4 +194,3 @@ def export_vin_raport_pdf(request):
             return render(request, 'home.html', context={'message_error':message_error})
 
     return render(request, 'home.html')
-            
