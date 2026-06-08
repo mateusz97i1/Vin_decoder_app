@@ -44,6 +44,8 @@ def generate_pdf_task(vin, car_description):
 
         file_name = f"raport_VIN_{vin}.pdf"
 
+        logger.info(f"Uploading PDF to Supabase: {file_name}")
+        
         #upload pdf to supabsae
         supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
             path=file_name,
@@ -53,14 +55,18 @@ def generate_pdf_task(vin, car_description):
             "content-type": "application/pdf"
             })
 
+        logger.info(f"PDF uploaded successfully, getting public URL")
+        
         #retrieve URL donwload
         download_url_public = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(
-            path = file_name,
-            options={"download": True})
+            file_name,
+            {"download": True})
 
+        logger.info(f"Public URL generated: {download_url_public}")
+        
         return download_url_public
 
     except Exception as e:
 
-        logger.exception(f"Error during uploading file to supabase or genereting public URL {e}")
+        logger.exception(f"Error during uploading file to supabase or genereting public URL: {e}")
         return None

@@ -1,0 +1,23 @@
+{% if status == 'PROCESSING' %}
+<div hx-get="{% url 'vin_decoder:check_pdf_status' task_id=task_id %}" hx-trigger="every 2s"
+    hx-target="#pdf-download-container" hx-swap="innerHTML"
+    class="flex items-center gap-3 px-5 py-2 mt-2 border text-amber-800 bg-amber-50 border-amber-200 rounded-xl">
+    <span class="relative flex w-3 h-3">
+        <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-amber-400"></span>
+        <span class="relative inline-flex w-3 h-3 rounded-full bg-amber-500"></span>
+    </span>
+    <span class="text-sm font-medium animate-pulse">Generating PDF report, please wait...</span>
+</div>
+
+{% elif status == 'SUCCESS' %}
+<div class="flex flex-col gap-2 mt-2">
+    <span class="flex items-center gap-1 text-sm font-medium text-green-700">
+        ✓ Report compiled successfully!
+    </span>
+
+    <a href="{{ download_url }}" target="_blank"
+        class="inline-block px-5 py-2 text-center text-white transition-colors rounded-xl bg-emerald-600 hover:bg-emerald-700">
+        📥 Download PDF Report
+    </a>
+</div>
+{% endif %}

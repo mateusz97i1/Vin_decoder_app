@@ -1,25 +1,16 @@
-import openai
-import os
-import requests
 import logging
-import io
 import markdown2
-import hashlib
 
 
 from django.shortcuts import render , redirect
-from xhtml2pdf import pisa
-from django.http import FileResponse
 from django.views.decorators.http import require_POST, require_GET
 from django_ratelimit.decorators import ratelimit 
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.template.loader import render_to_string
 from celery.result import AsyncResult
 
 
 from .forms import InputVinForm
-from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from .tasks import generate_pdf_task
 
@@ -109,61 +100,6 @@ def openai_common_car_issues(request):
 
 
 
-# @require_POST
-# def export_vin_raport_pdf(request):
-
-#     """Generates pdf with AI generated raport. Data comes from supabase bucket"""
-
-#     action = request.POST.get('action')
-#     vin = request.POST.get('vin')
-#     car_description = request.POST.get('car_description')
-
-#     if not vin:
-#         logger.error("Can't get VIN")
-
-#         return redirect('vin_decoder:home')
-
-#     #get raport from cache
-#     raw_info_data = get_raport_data_from_redis(car_description)
-
-#     if not raw_info_data:
-#         logger.error(f"Cache miss for data: {car_description}")
-
-#         return redirect('vin_decoder:home')
-
-
-#     # button: generates pdf raport and returns it as response, otherwise return to home page
-#     if action == "save_pdf":
-
-#         try:
-
-#              #visual edit using markdown
-#             car_info_data = markdown2.markdown(raw_info_data, extras= ['break-on-newline'])
-
-#             #use html template to generate pdf file  
-#             html_string = render_to_string('pdf_render/car_raport_pdf.html', context={
-#                 'raport_html': car_info_data,
-#                 'vin': vin
-#             })
-
-#             pdf_file = generate_car_raport_pdf(html_content= html_string)
-
-#             return FileResponse(
-#                 pdf_file,
-#                 as_attachment= True,
-#                 filename=f"raport_VIN_{vin}.pdf",
-#                 content_type= "application/pdf"
-#             )
-        
-#         except Exception as e:
-
-#             message_error = "Error during generating pdf."
-#             logger.exception(f"Error during generating pdf {e}")
-
-#             return render(request, 'home.html', context={'message_error':message_error})
-
-#     return render(request, 'home.html')
-            
 @require_POST
 def export_vin_raport_pdf(request):
 
@@ -183,8 +119,12 @@ def export_vin_raport_pdf(request):
     if action == "save_pdf":
 
         try:
+            # Trigger celery task
+           task = generate_pdf_task.delay(vin,car_description)
 
-            generate_pdf_task.delay(vin,car_description)
+           return render(request,'partials/pdf_status.html',
+                         context={'task_id': task.id,
+                                  'status': 'PROCESSING'})
         
         except Exception as e:
 
@@ -194,3 +134,38 @@ def export_vin_raport_pdf(request):
             return render(request, 'home.html', context={'message_error':message_error})
 
     return render(request, 'home.html')
+
+
+
+@require_GET
+def check_pdf_status(request, task_id):
+    """HTMX will hit this endpoint every 2 seconds"""
+    task_result = AsyncResult(task_id)
+
+    logger.info(f"Task {task_id} status: {task_result.status}")
+
+    if task_result.status == "SUCCESS":
+        download_url = task_result.result
+        
+        logger.info(f"Task result type: {type(download_url)}, Value: {download_url}")
+
+        # Supabase get_public_url() returns a string directly
+        if not download_url or download_url == "None":
+            logger.error("No download URL found in task result")
+            return render(request, 'home.html', {'message_error': 'Failed to generate download link.'})
+
+        return render(request, 'partials/pdf_status.html', {
+            'status': 'SUCCESS', 
+            'download_url': download_url
+        })
+    
+    elif task_result.status == 'FAILURE':
+        logger.error(f"PDF generation task failed: {task_result.result}")
+        return render(request, 'home.html', {'message_error': 'PDF generation failed.'})
+        
+    # If still PENDING/PROCESSING, return the same polling template
+    return render(request,'partials/pdf_status.html',
+                         context={'task_id': task_id,
+                                  'status': 'PROCESSING'})
+
+

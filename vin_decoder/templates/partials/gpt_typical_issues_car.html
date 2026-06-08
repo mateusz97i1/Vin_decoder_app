@@ -35,7 +35,8 @@
 
 <div class="flex">
     <div class="flex">
-        <form method="post" action="{% url 'vin_decoder:export_pdf' %}">
+        <form method="post" action="{% url 'vin_decoder:export_pdf' %}" hx-target="#pdf-download-container"
+            hx-swap="innerHTML">
             {% csrf_token %}
             <input type="hidden" name="vin" value="{{ vin }}">
             <input type="hidden" name="car_description" value="{{ car_description }}">
