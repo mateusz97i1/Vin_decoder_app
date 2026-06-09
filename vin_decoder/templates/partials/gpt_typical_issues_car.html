@@ -1,5 +1,6 @@
 {% load static tailwind_tags %}
 {% load static %}
+
 <!-- yellow box with raport and message error if exist -->
 <div class="max-w-2xl mx-auto my-6 overflow-hidden bg-white border shadow-sm border-amber-100 rounded-xl">
     <div class="flex items-start gap-4 p-5 bg-amber-50/50">
@@ -35,8 +36,7 @@
 
 <div class="flex">
     <div class="flex">
-        <form method="post" action="{% url 'vin_decoder:export_pdf' %}" hx-target="#pdf-download-container"
-            hx-swap="innerHTML">
+        <form method="post" action="{% url 'vin_decoder:export_pdf' %}">
             {% csrf_token %}
             <input type="hidden" name="vin" value="{{ vin }}">
             <input type="hidden" name="car_description" value="{{ car_description }}">
@@ -47,8 +47,6 @@
         </form>
 
     </div>
-
-
 
 
 </div>
