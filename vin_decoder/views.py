@@ -8,6 +8,7 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from celery.result import AsyncResult
+from django.http import HttpResponse
 
 
 from .forms import InputVinForm
@@ -54,7 +55,7 @@ def home(request):
         })
 
 
-@login_required
+# @login_required
 @ratelimit(key='ip', rate='3/m', block= False)
 @require_POST
 def openai_common_car_issues(request):
@@ -122,9 +123,8 @@ def export_vin_raport_pdf(request):
             # Trigger celery task
            task = generate_pdf_task.delay(vin,car_description)
 
-           return render(request,'partials/pdf_status.html',
-                         context={'task_id': task.id,
-                                  'status': 'PROCESSING'})
+           return render(request,'partials/pdf_loading.html',
+                         context={'task': task})
         
         except Exception as e:
 
@@ -138,34 +138,8 @@ def export_vin_raport_pdf(request):
 
 
 @require_GET
-def check_pdf_status(request, task_id):
-    """HTMX will hit this endpoint every 2 seconds"""
-    task_result = AsyncResult(task_id)
-
-    logger.info(f"Task {task_id} status: {task_result.status}")
-
-    if task_result.status == "SUCCESS":
-        download_url = task_result.result
-        
-        logger.info(f"Task result type: {type(download_url)}, Value: {download_url}")
-
-        # Supabase get_public_url() returns a string directly
-        if not download_url or download_url == "None":
-            logger.error("No download URL found in task result")
-            return render(request, 'home.html', {'message_error': 'Failed to generate download link.'})
-
-        return render(request, 'partials/pdf_status.html', {
-            'status': 'SUCCESS', 
-            'download_url': download_url
-        })
+def check_task_status(request, task_id):
+    res = AsyncResult(task_id)
     
-    elif task_result.status == 'FAILURE':
-        logger.error(f"PDF generation task failed: {task_result.result}")
-        return render(request, 'home.html', {'message_error': 'PDF generation failed.'})
-        
-    # If still PENDING/PROCESSING, return the same polling template
-    return render(request,'partials/pdf_status.html',
-                         context={'task_id': task_id,
-                                  'status': 'PROCESSING'})
-
-
+    logger.info(f"Task {task_id} status: {res.status}")
+    pass
