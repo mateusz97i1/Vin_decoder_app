@@ -55,7 +55,7 @@ def home(request):
         })
 
 
-# @login_required
+@login_required
 @ratelimit(key='ip', rate='3/m', block= False)
 @require_POST
 def openai_common_car_issues(request):
@@ -103,43 +103,53 @@ def openai_common_car_issues(request):
 
 @require_POST
 def export_vin_raport_pdf(request):
-
     """Generates pdf with AI generated raport. Data comes from supabase bucket"""
-
     action = request.POST.get('action')
     vin = request.POST.get('vin')
     car_description = request.POST.get('car_description')
 
     if not vin:
         logger.error("Can't get VIN")
-
         return redirect('vin_decoder:home')
 
-
-    # button: generates pdf raport and returns it as response, otherwise return to home page
     if action == "save_pdf":
-
         try:
             # Trigger celery task
-           task = generate_pdf_task.delay(vin,car_description)
+            task = generate_pdf_task.delay(vin, car_description)
 
-           return render(request,'partials/pdf_loading.html',
-                         context={'task': task})
+            # Return the loading state fragment to HTMX
+            return render(request, 'partials/pdf_loading.html', context={
+                'task_id': task.id,
+                'status': 'PENDING'
+            })
         
         except Exception as e:
-
-            message_error = "Error during generating pdf."
             logger.exception(f"Error during generating pdf {e}")
+            # If HTMX request, you might want to return an error snippet instead of whole home.html
+            return HttpResponse("Error during generating pdf.", status=500)
 
-            return render(request, 'home.html', context={'message_error':message_error})
-
-    return render(request, 'home.html')
-
+    return redirect('vin_decoder:home')
 
 
 @require_GET
 def check_task_status(request, task_id):
+    """Checks status of generated raport if it is ready to donwload"""
     res = AsyncResult(task_id)
-    
     logger.info(f"Task {task_id} status: {res.status}")
-    pass
+    
+    # 1. If it's still processing, keep polling
+    if res.status in ['PENDING', 'STARTED', 'PROGRESS']:
+        return render(request, 'partials/pdf_loading.html', context={
+            'task_id': task_id,
+            'status': res.status
+        })
+        
+    # 2. If it succeeded, tell HTMX to stop polling and show a download link 
+    # (or use hx-redirect to download it immediately)
+    if res.status == 'SUCCESS':
+        # Assuming your task returns the download URL or file path
+        download_url = res.result 
+        return HttpResponse(f'<a href="{download_url}" class="btn btn-success" target="_blank">📥 Click here to Download PDF</a>')
+
+    # 3. If it failed
+    return HttpResponse("<p class='text-red-500'>PDF Generation failed. Please try again.</p>")

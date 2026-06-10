@@ -1,5 +1,8 @@
-<div id="pdf-download-container" hx-get="/check-task-status/{{ task_id }}/" hx-trigger="every 2s" hx-target="this"
+<div id="pdf-download-container" hx-get="/check_task_status/{{ task_id }}/" hx-trigger="every 2s" hx-target="this"
     hx-swap="outerHTML">
-    <div class="spinner"></div>
+
+    <div class="flex items-center space-x-2">
+        <p>Current Status: <strong>{{ status }}</strong></p>
+    </div>
     <p>Generating your car report PDF. Please wait...</p>
 </div>
