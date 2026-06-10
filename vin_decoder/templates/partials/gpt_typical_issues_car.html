@@ -34,19 +34,14 @@
 
 <!-- save results as pdf file -->
 
-<div class="flex">
-    <div class="flex">
-        <form method="post" action="{% url 'vin_decoder:export_pdf' %}">
-            {% csrf_token %}
-            <input type="hidden" name="vin" value="{{ vin }}">
-            <input type="hidden" name="car_description" value="{{ car_description }}">
-            <input type="hidden" name="ai_analysis" value="{{ results_html }}">
-            <button type="submit" name="action" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent" value="save_pdf">
-                Save Raport-home html
-            </button>
-        </form>
+<div class="flex" id="raport-container">
+    <form hx-post="{% url 'vin_decoder:export_pdf' %}" hx-target="#raport-container" hx-swap="outerHTML">
+        {% csrf_token %}
+        <input type="hidden" name="vin" value="{{ vin }}">
+        <input type="hidden" name="car_description" value="{{ car_description }}">
 
-    </div>
-
-
+        <button type="submit" name="action" value="save_pdf" class="px-5 py-2 mt-2 text-white rounded-xl bg-accent">
+            Save Raport
+        </button>
+    </form>
 </div>
