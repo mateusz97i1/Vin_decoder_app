@@ -2,9 +2,9 @@ import logging
 import markdown2
 
 
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST, require_GET
-from django_ratelimit.decorators import ratelimit 
+from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from celery.result import AsyncResult
@@ -15,60 +15,66 @@ from .forms import InputVinForm
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from .tasks import generate_pdf_task
 
-#create logger
+# create logger
 logger = logging.getLogger(__name__)
 
-#bmw vin number
+# bmw vin number
 test_vin = "WBA5U9C00LFJ37061"
 
-@ratelimit(key='ip', rate='30/m',  block= False)
+
+@ratelimit(key="ip", rate="30/m", block=False)
 @require_GET
 def home(request):
     """
     gets vehicle vin and gets it's info from NHTSA API
     """
-    was_limited = getattr(request, 'limited', False)
+    was_limited = getattr(request, "limited", False)
     car_info = None
     message_error = None
     vin = None
-    form_vin =InputVinForm(request.GET or None)
+    form_vin = InputVinForm(request.GET or None)
 
     # when rate limiter is hit
     if was_limited:
         message_error = "You have reached refresh limit, Pleas wait 1 min to try agian."
-        return render(request, 'home.html', context={
-            'message_error': message_error,
-            'form_vin': form_vin
-        })
+        return render(
+            request,
+            "home.html",
+            context={"message_error": message_error, "form_vin": form_vin},
+        )
 
     if form_vin.is_valid():
-
-        vin = form_vin.cleaned_data['vin_number']
+        vin = form_vin.cleaned_data["vin_number"]
         car_info, message_error = get_vehicle_data_vin(vin)
 
-
-    return render(request, 'home.html',context= {
-        'car_info': car_info,
-        'message_error': message_error,
-        'vin': vin,
-        'form_vin':form_vin
-        })
+    return render(
+        request,
+        "home.html",
+        context={
+            "car_info": car_info,
+            "message_error": message_error,
+            "vin": vin,
+            "form_vin": form_vin,
+        },
+    )
 
 
 @login_required
-@ratelimit(key='ip', rate='3/m', block= False)
+@ratelimit(key="ip", rate="3/m", block=False)
 @require_POST
 def openai_common_car_issues(request):
     """
     asks chatgpt API about most common car issues
     """
-    was_limited = getattr(request, 'limited', False)
+    was_limited = getattr(request, "limited", False)
 
     if was_limited:
         message_error = "You have reached refresh limit, Pleas wait 1 min to try agian."
-        return render(request, 'partials/gpt_typical_issues_car.html', context={
-            'message_error': message_error
-        })
+        return render(
+            request,
+            "partials/gpt_typical_issues_car.html",
+            context={"message_error": message_error},
+        )
 
     # get car value
     car_description = request.POST.get("car_description", "")
@@ -76,41 +82,43 @@ def openai_common_car_issues(request):
     action = request.POST.get("action")
     vin = request.POST.get("vin", "")
 
-    #when invalid action return errror
+    # when invalid action return errror
     if not action or not car_description:
-        return render(request, 'partials/gpt_typical_issues_car.html', 
-                      {'message_error': "Invalid action"})
+        return render(
+            request,
+            "partials/gpt_typical_issues_car.html",
+            {"message_error": "Invalid action"},
+        )
 
-
-    #get openAI response from servies,py
+    # get openAI response from servies,py
     raw_results, message_error = openai_prompt_basic(car_description)
 
-    #visual edit using markdown
-    results_html = markdown2.markdown(raw_results, extras= ['break-on-newline'])
+    # visual edit using markdown
+    results_html = markdown2.markdown(raw_results, extras=["break-on-newline"])
 
-
-            
     # Return onlyu partial from templates/partials/
-    return render(request, 'partials/gpt_typical_issues_car.html', 
-                    context= {
-                    'results_html': results_html,
-                    'message_error': message_error,
-                    'vin': vin,
-                    'car_description':car_description,
-                    })
-
+    return render(
+        request,
+        "partials/gpt_typical_issues_car.html",
+        context={
+            "results_html": results_html,
+            "message_error": message_error,
+            "vin": vin,
+            "car_description": car_description,
+        },
+    )
 
 
 @require_POST
 def export_vin_raport_pdf(request):
     """Generates pdf with AI generated raport. Data comes from supabase bucket"""
-    action = request.POST.get('action')
-    vin = request.POST.get('vin')
-    car_description = request.POST.get('car_description')
+    action = request.POST.get("action")
+    vin = request.POST.get("vin")
+    car_description = request.POST.get("car_description")
 
     if not vin:
         logger.error("Can't get VIN")
-        return redirect('vin_decoder:home')
+        return redirect("vin_decoder:home")
 
     if action == "save_pdf":
         try:
@@ -118,17 +126,18 @@ def export_vin_raport_pdf(request):
             task = generate_pdf_task.delay(vin, car_description)
 
             # Return the loading state fragment to HTMX
-            return render(request, 'partials/pdf_loading.html', context={
-                'task_id': task.id,
-                'status': 'PENDING'
-            })
-        
+            return render(
+                request,
+                "partials/pdf_loading.html",
+                context={"task_id": task.id, "status": "PENDING"},
+            )
+
         except Exception as e:
             logger.exception(f"Error during generating pdf {e}")
-            # If HTMX request, you might want to return an error snippet instead of whole home.html
+
             return HttpResponse("Error during generating pdf.", status=500)
 
-    return redirect('vin_decoder:home')
+    return redirect("vin_decoder:home")
 
 
 @require_GET
@@ -136,20 +145,31 @@ def check_task_status(request, task_id):
     """Checks status of generated raport if it is ready to donwload"""
     res = AsyncResult(task_id)
     logger.info(f"Task {task_id} status: {res.status}")
-    
-    # 1. If it's still processing, keep polling
-    if res.status in ['PENDING', 'STARTED', 'PROGRESS']:
-        return render(request, 'partials/pdf_loading.html', context={
-            'task_id': task_id,
-            'status': res.status
-        })
-        
-    # 2. If it succeeded, tell HTMX to stop polling and show a download link 
-    # (or use hx-redirect to download it immediately)
-    if res.status == 'SUCCESS':
-        # Assuming your task returns the download URL or file path
-        download_url = res.result 
-        return HttpResponse(f'<a href="{download_url}" class="btn btn-success" target="_blank">📥 Click here to Download PDF</a>')
 
-    # 3. If it failed
-    return HttpResponse("<p class='text-red-500'>PDF Generation failed. Please try again.</p>")
+    # If it's still processing, keep polling
+    if res.status in ["PENDING", "STARTED", "PROGRESS"]:
+        return render(
+            request,
+            "partials/pdf_loading.html",
+            context={"task_id": task_id, "status": res.status},
+        )
+
+    # If it succeeded, tell HTMX to stop polling and show a download link
+    if res.status == "SUCCESS":
+        # task returns the download URL
+        download_url = res.result
+        return render(
+            request,
+            "partials/pdf_download.html",
+            context={"download_url": download_url},
+        )
+
+    download_url_failed = res.info
+
+    # If it failed
+    logger.error("Error during generating pdf url")
+    return render(
+        request,
+        "partials/pdf_download_failed.html",
+        context={"failed_info": download_url_failed},
+    )
