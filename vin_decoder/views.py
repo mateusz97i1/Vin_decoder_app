@@ -172,4 +172,5 @@ def check_task_status(request, task_id):
         request,
         "partials/pdf_download_failed.html",
         context={"failed_info": download_url_failed},
+        status=286
     )
