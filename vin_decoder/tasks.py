@@ -5,6 +5,7 @@ from celery import shared_task
 from django.template.loader import render_to_string
 from django.conf import settings
 from supabase import create_client, Client
+from celery.exceptions import SoftTimeLimitExceeded
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 
-@shared_task
+@shared_task(soft_time_limit=15, time_limit=30)
 def generate_pdf_task(vin, car_description):
 
     try:
@@ -25,7 +26,7 @@ def generate_pdf_task(vin, car_description):
 
         if not raw_info_data:
             logger.error(f"Cache miss for data: {car_description}")
-            return None
+            raise ValueError(f"Cache miss - no report data found in Redis for: {car_description}")
         
         #visual edit using markdown
         car_info_data = markdown2.markdown(raw_info_data, extras= ['break-on-newline'])
@@ -66,7 +67,13 @@ def generate_pdf_task(vin, car_description):
         
         return download_url_public
 
+    except SoftTimeLimitExceeded:
+        logger.warning(f"Task generating pdf for {vin} was shout. Exceeded soft_time_limit (5s).")
+        raise  
+
+
     except Exception as e:
 
         logger.exception(f"Error during uploading file to supabase or genereting public URL: {e}")
-        return None
+        raise
+
