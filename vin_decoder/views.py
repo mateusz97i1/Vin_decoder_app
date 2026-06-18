@@ -129,7 +129,7 @@ def export_vin_raport_pdf(request):
             return render(
                 request,
                 "partials/pdf_loading.html",
-                context={"task_id": task.id, "status": "PENDING"},
+                context={"task_id": task.id},
             )
 
         except Exception as e:
@@ -142,12 +142,14 @@ def export_vin_raport_pdf(request):
 
 @require_GET
 def check_task_status(request, task_id):
-    """Checks status of generated raport if it is ready to donwload"""
+    """Checks status of generated raport if it's ready to donwload"""
+
+
     res = AsyncResult(task_id)
     logger.info(f"Task {task_id} status: {res.status}")
 
     # If it's still processing, keep polling
-    if res.status in ["PENDING", "STARTED", "PROGRESS"]:
+    if not res.ready():
         return render(
             request,
             "partials/pdf_loading.html",
@@ -164,13 +166,11 @@ def check_task_status(request, task_id):
             context={"download_url": download_url},
         )
 
-    download_url_failed = res.info
 
     # If it failed
     logger.error("Error during generating pdf url")
     return render(
         request,
         "partials/pdf_download_failed.html",
-        context={"failed_info": download_url_failed},
-        status=286
+        context={"failed_info": str(res.info)},
     )
