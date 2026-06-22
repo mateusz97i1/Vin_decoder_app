@@ -28,7 +28,7 @@ SECRET_KEY =  os.getenv('SECRET_KEY')
 ALLAUTH_SECRET_KEY = os.getenv('ALLAUTH_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -66,7 +66,7 @@ if DEBUG:
 
 
 MIDDLEWARE = [
-    
+     
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,9 +77,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     # Allauth Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
-    #redis
-    # "django.middleware.cache.FetchFromCacheMiddleware",
-    # "django.middleware.cache.UpdateCacheMiddleware",
+   
 ]
 
 if DEBUG:
@@ -184,7 +182,7 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
+#--------------------------Logger------------------------------
 #setting a logging save info
 logging.basicConfig(
     filename="vinex_app.log",
