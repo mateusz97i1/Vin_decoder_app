@@ -227,7 +227,14 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # print mail content in console instead of using smtp and sending mails
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT =os.getenv('EMAIL_PORT')
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
+
 
 #-----------------CRIPSY FORMS ------------------
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"

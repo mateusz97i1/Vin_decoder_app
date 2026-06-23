@@ -1,0 +1,44 @@
+{% extends 'home.html' %}
+{% load static tailwind_tags %}
+{% load i18n %}
+{% load account %}
+
+{% block authentication %}
+
+<h1 class="mb-6 text-3xl font-bold text-gray-800">
+    <a href="{% url 'vin_decoder:home' %}">Vinex-USA</a>
+</h1>
+
+<div class="w-full max-w-md p-8 mx-4 text-center bg-white shadow-lg rounded-2xl">
+
+    <div class="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-blue-50 text-accent">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 19v-8.93a2 2 0 01.89-1.664l8-5.333a2 2 0 012.22 0l8 5.333A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5">
+            </path>
+        </svg>
+    </div>
+
+    <h2 class="mb-4 text-2xl font-bold text-gray-800">
+        {% trans "Verify Your Email Address" %}
+    </h2>
+
+    <div
+        class="p-4 space-y-4 text-sm leading-relaxed text-left text-gray-600 border border-gray-100 bg-gray-50 rounded-xl">
+        <p>
+            {% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the
+            signup process.{% endblocktrans %}
+        </p>
+        <p class="pt-3 font-medium text-gray-500 border-t border-gray-200">
+            {% blocktrans %}If you do not see the verification email in your main inbox, check your spam folder. Please
+            contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}
+        </p>
+    </div>
+
+    <p class="mt-8 text-sm text-gray-500">
+        <a href="{% url 'account_login' %}" class="font-bold text-accent hover:underline">Back to Log In</a>
+    </p>
+</div>
+
+{% endblock authentication %}
