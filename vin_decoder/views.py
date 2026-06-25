@@ -108,7 +108,7 @@ def openai_common_car_issues(request):
         },
     )
 
-
+@login_required
 @require_POST
 def export_vin_raport_pdf(request):
     """Generates pdf with AI generated raport. Data comes from supabase bucket"""
@@ -139,7 +139,7 @@ def export_vin_raport_pdf(request):
 
     return redirect("vin_decoder:home")
 
-
+@login_required
 @require_GET
 def check_task_status(request, task_id):
     """Checks status of generated raport if it's ready to donwload"""

@@ -6,6 +6,8 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from supabase import create_client, Client
 from celery.exceptions import SoftTimeLimitExceeded
+from django.core.mail import EmailMultiAlternatives
+from requests.exceptions import RequestException
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 
@@ -75,3 +77,18 @@ def generate_pdf_task(vin, car_description):
         logger.exception(f"Error during uploading file to supabase or genereting public URL: {e}")
         raise
 
+
+@shared_task(
+    autoretry_for = (RequestException,),
+    retry_kwargs={'max_retries': 5},
+    retry_backoff = True,
+    retry_backoff_max = 100,
+    rate_limit='50/m'
+)
+def send_async_email(email_data):
+    "Send Async email using celery and django email backend"
+
+    msg=EmailMultiAlternatives(
+
+    )
+    pass

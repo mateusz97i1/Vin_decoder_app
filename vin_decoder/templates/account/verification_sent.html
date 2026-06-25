@@ -12,12 +12,12 @@
 <div class="w-full max-w-md p-8 mx-4 text-center bg-white shadow-lg rounded-2xl">
 
     <div class="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-blue-50 text-accent">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 19v-8.93a2 2 0 01.89-1.664l8-5.333a2 2 0 012.22 0l8 5.333A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5">
-            </path>
+        <svg class="w-8 h-8 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+            <path
+                d="M476.4 233.1L111.8 19.3c-15.1-8.5-33.9-7.1-47.6 3.4S44.6 51.9 49 68.8l43.2 165.2c1.7 6.6 7.2 11.5 14 12.3l213.9 23.7c3.1.3 3.1 4.7 0 5L106.2 298.7c-6.8.8-12.3 5.7-14 12.3L49 476.2c-4.4 16.9 2.5 35 16.2 45.5s32.5 11.9 47.6 3.4l363.6-213.8c14.1-8.3 22.7-23.5 22.7-40.1s-8.6-31.8-22.7-40.1z"
+                fill="#1d74e8" />
         </svg>
+
     </div>
 
     <h2 class="mb-4 text-2xl font-bold text-gray-800">
@@ -25,16 +25,20 @@
     </h2>
 
     <div
-        class="p-4 space-y-4 text-sm leading-relaxed text-left text-gray-600 border border-gray-100 bg-gray-50 rounded-xl">
-        <p>
+        class="p-4 space-y-4 leading-relaxed text-center text-gray-600 border border-gray-100 text-md bg-gray-50 rounded-xl">
+        <p class="font-bold">
             {% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the
             signup process.{% endblocktrans %}
         </p>
-        <p class="pt-3 font-medium text-gray-500 border-t border-gray-200">
+
+    </div>
+    <div>
+        <p class="pt-3 text-sm font-small">
             {% blocktrans %}If you do not see the verification email in your main inbox, check your spam folder. Please
             contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}
         </p>
     </div>
+
 
     <p class="mt-8 text-sm text-gray-500">
         <a href="{% url 'account_login' %}" class="font-bold text-accent hover:underline">Back to Log In</a>
