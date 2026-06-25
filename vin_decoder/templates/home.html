@@ -86,13 +86,13 @@
 
             <!-- ALLAUTH LOGIC -->
 
-            <div class="font-bold">
+            <div class="flex flex-col font-bold">
                 {% if user.is_authenticated %}
                 <p>Witaj, {{ user.username }}!</p>
-                <a href="{% url 'account_logout' %}">Wyloguj się</a>
+                <a href="{% url 'account_logout' %}">Sign Out</a>
                 {% else %}
-                <a href="{% provider_login_url 'google' %}">Zaloguj przez Google</a>
-                <a href="{% url 'account_login' %}">Inne opcje logowania</a>
+                <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
+                <a href="{% url 'account_login' %}">Other logging options</a>
                 {% endif %}
             </div>
 
