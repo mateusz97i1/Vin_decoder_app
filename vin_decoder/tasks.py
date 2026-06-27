@@ -1,5 +1,7 @@
 import logging
 import markdown2
+import smtplib
+import socket
 
 from celery import shared_task
 from django.template.loader import render_to_string
@@ -7,7 +9,6 @@ from django.conf import settings
 from supabase import create_client, Client
 from celery.exceptions import SoftTimeLimitExceeded
 from django.core.mail import EmailMultiAlternatives
-from requests.exceptions import RequestException
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 
@@ -18,7 +19,11 @@ logger = logging.getLogger(__name__)
 supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 
-@shared_task(soft_time_limit=15, time_limit=30)
+@shared_task(
+    soft_time_limit=15,
+    time_limit=30,
+    queue='generate_pdf',
+)
 def generate_pdf_task(vin, car_description):
 
     try:
@@ -73,22 +78,48 @@ def generate_pdf_task(vin, car_description):
 
 
     except Exception as e:
-
         logger.exception(f"Error during uploading file to supabase or genereting public URL: {e}")
         raise
 
 
+
 @shared_task(
-    autoretry_for = (RequestException,),
+    bind= True,
     retry_kwargs={'max_retries': 5},
     retry_backoff = True,
     retry_backoff_max = 100,
-    rate_limit='50/m'
+    rate_limit='4/m',
+    queue='emails'
 )
-def send_async_email(email_data):
+def send_async_email(self, email_data):
     "Send Async email using celery and django email backend"
 
-    msg=EmailMultiAlternatives(
 
+
+    msg = EmailMultiAlternatives(
+        subject=email_data.get('subject', ''),
+        body=email_data.get('body', ''),
+        from_email=email_data.get('from_email'),
+        to=email_data.get('to', []),
+        cc=email_data.get('cc', []),
+        bcc=email_data.get('bcc', []),
+        headers=email_data.get('headers', {}),
     )
-    pass
+
+    #Attach html if exists
+    html_content = email_data.get('html_body')
+
+    if html_content:
+        msg.attach_alternative(html_content,"text/html")
+
+
+    try:
+        msg.send()
+
+    except (smtplib.SMTPException, socket.error) as e:
+        logger.error(f"Smpt error sending email{e}")
+        raise self.retry(exc=e)
+
+    except Exception as e:
+        logger.error(f'Error during sending error {e}')
+        raise
