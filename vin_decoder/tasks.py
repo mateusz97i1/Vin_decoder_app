@@ -69,11 +69,13 @@ def generate_pdf_task(vin, car_description):
             {"download": True})
 
         logger.info(f"Public URL generated: {download_url_public}")
+
+        # TODO: Save download_url_public into database!
         
         return download_url_public
 
     except SoftTimeLimitExceeded:
-        logger.warning(f"Task generating pdf for {vin} was shout. Exceeded soft_time_limit (5s).")
+        logger.warning(f"Task generating pdf for {vin} was shout. Exceeded soft_time_limit (15s).")
         raise  
 
 

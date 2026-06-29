@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 test_vin = "WBA5U9C00LFJ37061"
 
 
+
 @ratelimit(key="ip", rate="30/m", block=False)
 @require_GET
 def home(request):
@@ -57,6 +58,7 @@ def home(request):
             "form_vin": form_vin,
         },
     )
+
 
 
 @login_required
@@ -108,6 +110,8 @@ def openai_common_car_issues(request):
         },
     )
 
+
+
 @login_required
 @require_POST
 def export_vin_raport_pdf(request):
@@ -138,6 +142,8 @@ def export_vin_raport_pdf(request):
             return HttpResponse("Error during generating pdf.", status=500)
 
     return redirect("vin_decoder:home")
+
+
 
 @login_required
 @require_GET
