@@ -229,7 +229,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# print mail content in console instead of using smtp and sending mails
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT =os.getenv('EMAIL_PORT')
@@ -239,6 +239,8 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 EMAIL_TIMEOUT = 15
 
+#adapter for async emails
+ACCOUNT_ADAPTER = 'vin_decoder.adapters.AsyncAccountAdapter'
 
 #-----------------CRIPSY FORMS ------------------
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
