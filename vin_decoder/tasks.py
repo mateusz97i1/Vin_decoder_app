@@ -13,7 +13,6 @@ from django.core.mail import EmailMultiAlternatives
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 
 
-
 logger = logging.getLogger(__name__)
 
 supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -27,6 +26,7 @@ supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 def generate_pdf_task(vin, car_description):
 
     try:
+
 
         #get raport from cache
         raw_info_data = get_raport_data_from_redis(car_description)
