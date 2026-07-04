@@ -9,7 +9,9 @@ from openai import OpenAIError
 from openai import OpenAI
 from django.core.cache import cache
 from django.conf import settings
+from typing import Optional
 
+from .models import MetadataRaports
 
 
 #We don't print in production
@@ -173,4 +175,14 @@ def openai_prompt_basic( car_description):
 
 
 
+def get_ready_report_url_supabase_db(car_description: str) -> Optional[str]:
+    "Get raport only if status is completed"
 
+    report = MetadataRaports.objects.filter(car_model = car_description,
+                                            status = 'COMPLETED'
+).only('supabase_url').first()
+    
+
+    if report:
+
+        return report.supabase_url

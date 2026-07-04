@@ -38,6 +38,8 @@ def generate_car_raport_pdf(html_content):
 
 
 def get_raport_data_from_redis(car_description):
+    "Get cahced data from redis usig cache key"
+
     #AI model version
     prompt_version = settings.PROMPT_VERSION
 
