@@ -11,6 +11,7 @@ from celery.exceptions import SoftTimeLimitExceeded
 from django.core.mail import EmailMultiAlternatives
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
+from .services import get_ready_report_url_supabase_db
 
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,11 @@ supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 def generate_pdf_task(vin, car_description):
 
     try:
+        #if raport already exists get url from db:
+        report_url_db= get_ready_report_url_supabase_db(car_description)
+
+        if report_url_db:
+            return report_url_db
 
 
         #get raport from cache
@@ -50,7 +56,10 @@ def generate_pdf_task(vin, car_description):
         pdf_file.seek(0)
         pdf_bytes = pdf_file.getvalue()
 
-        file_name = f"raport_VIN_{vin}.pdf"
+        #replace spaces with floor for better reading
+        clean_car_description = str(car_description).strip().upper().replace(" ","_")
+        
+        file_name = f"report_{clean_car_description}.pdf"
 
         
         #upload pdf to supabsae
