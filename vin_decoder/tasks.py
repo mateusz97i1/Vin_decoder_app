@@ -28,10 +28,12 @@ supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 def generate_pdf_task(vin, car_description):
 
     #if raport already exists get url from db:
-    # report_url_db= get_ready_report_url_supabase_db(car_description)
+    report_url_db= get_ready_report_url_supabase_db(car_description)
 
-    # if report_url_db:
-    #     return report_url_db
+    if report_url_db:
+        print("DEBUG: ZNALAZŁEM URL W DB!")
+        logger.info("got url from db")
+        return report_url_db
 
 
     try:
