@@ -183,7 +183,7 @@ def get_ready_report_url_supabase_db(car_description: str) -> Optional[str]:
 
     #filter reports
     report = MetadataRaports.objects.filter(car_model = clean_car_description,
-                                            status = 'COMPLETED'
+                                            status = 'SUCCESS'
 ).only('supabase_url').first()
     
 
