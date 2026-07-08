@@ -11,8 +11,8 @@ class MetadataRaports(models.Model):
     STATUS_CHOICES=[
         ('PENDING', 'Pending'),
         ('PROCESSING', 'Processing'),
-        ('COMPLETED', 'Completed'),
-        ('FAILED', 'Failed'),
+        ('SUCCESS', 'Success'),
+        ('FAILURE', 'Failure'),
     ]
 
     id= models.UUIDField(primary_key=True, default= uuid.uuid4, editable= False)

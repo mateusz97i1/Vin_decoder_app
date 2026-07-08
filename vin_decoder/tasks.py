@@ -12,6 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from .services import get_ready_report_url_supabase_db
+from .models import MetadataRaports
 
 
 logger = logging.getLogger(__name__)
@@ -26,13 +27,15 @@ supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 )
 def generate_pdf_task(vin, car_description):
 
+    #if raport already exists get url from db:
+    # report_url_db= get_ready_report_url_supabase_db(car_description)
+
+    # if report_url_db:
+    #     return report_url_db
+
+
     try:
-        #if raport already exists get url from db:
-        report_url_db= get_ready_report_url_supabase_db(car_description)
-
-        if report_url_db:
-            return report_url_db
-
+        
 
         #get raport from cache
         raw_info_data = get_raport_data_from_redis(car_description)
@@ -80,6 +83,12 @@ def generate_pdf_task(vin, car_description):
         logger.info(f"Public URL generated: {download_url_public}")
 
         # TODO: Save download_url_public into database!
+        meta_db, created = MetadataRaports.objects.update_or_create(
+            car_model= clean_car_description,
+            status= 'SUCCESS',
+            supabase_url= download_url_public
+
+        )
         
         return download_url_public
 
