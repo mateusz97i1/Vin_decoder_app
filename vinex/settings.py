@@ -125,6 +125,7 @@ WSGI_APPLICATION = 'vinex.wsgi.application'
 
 DATABASES = {
     'default': {
+        # TODO : Add POSTRGES
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }

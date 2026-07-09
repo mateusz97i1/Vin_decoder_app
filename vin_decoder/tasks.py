@@ -87,8 +87,13 @@ def generate_pdf_task(vin, car_description):
         # TODO: Save download_url_public into database!
         meta_db, created = MetadataRaports.objects.update_or_create(
             car_model= clean_car_description,
-            status= 'SUCCESS',
-            supabase_url= download_url_public
+            defaults={
+
+                'status': 'SUCCESS',
+                'supabase_url':download_url_public
+
+            },
+            
 
         )
         
