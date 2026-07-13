@@ -61,7 +61,7 @@ def get_raport_data_from_redis(car_description):
     except Exception as e:
 
         logger.error(f"Error getting cached data {e}")
-        return None
+        return None 
 
 
     return cached_data

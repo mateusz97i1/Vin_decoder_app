@@ -29,10 +29,14 @@ def generate_pdf_task(vin, car_description):
 
     #if raport already exists get url from db:
     report_url_db= get_ready_report_url_supabase_db(car_description)
-
+# TODO: ADDSTAUS CHANGES HERE
     if report_url_db:
-        print("DEBUG: ZNALAZŁEM URL W DB!")
         logger.info("got url from db")
+        # MetadataRaports.objects.update_or_create(
+        #     defaults={
+        #         'status': 'SUCCESS',
+        #     },
+        # )
         return report_url_db
 
 
@@ -84,17 +88,13 @@ def generate_pdf_task(vin, car_description):
 
         logger.info(f"Public URL generated: {download_url_public}")
 
-        # TODO: Save download_url_public into database!
-        meta_db, created = MetadataRaports.objects.update_or_create(
+        #Save download_url_public into database!
+        MetadataRaports.objects.update_or_create(
             car_model= clean_car_description,
             defaults={
-
                 'status': 'SUCCESS',
                 'supabase_url':download_url_public
-
             },
-            
-
         )
         
         return download_url_public
