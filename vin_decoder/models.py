@@ -22,6 +22,7 @@ class MetadataRaports(models.Model):
     supabase_url=models.URLField(max_length=500, blank=True, null=True)
     created_at=models.DateTimeField(auto_now_add= True)
     updated_at= models.DateTimeField(auto_now= True)
+    most_recent_download= models.DateTimeField(auto_now= True)
     
     class Meta:
 
