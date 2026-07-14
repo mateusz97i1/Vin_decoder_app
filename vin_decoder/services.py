@@ -174,17 +174,14 @@ def openai_prompt_basic( car_description):
 
 
 
-
 def get_ready_report_url_supabase_db(car_description: str) -> Optional[str]:
     "Get url to the car report only if status is :completed"
 
 
-    clean_car_description = str(car_description).strip().upper().replace(" ","_")
-
     #filter reports
-    report = MetadataRaports.objects.filter(car_model = clean_car_description,
+    report = MetadataRaports.objects.filter(car_model = car_description,
                                             status = 'SUCCESS'
-).only('supabase_url').first()
+    ).only('supabase_url').first()
     
 
     if report:

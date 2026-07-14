@@ -27,21 +27,24 @@ supabase : Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 )
 def generate_pdf_task(vin, car_description):
 
-    #if raport already exists get url from db:
-    report_url_db= get_ready_report_url_supabase_db(car_description)
-# TODO: ADDSTAUS CHANGES HERE
-    if report_url_db:
-        logger.info("got url from db")
-        # MetadataRaports.objects.update_or_create(
-        #     defaults={
-        #         'status': 'SUCCESS',
-        #     },
-        # )
-        return report_url_db
+    #replace spaces with floor for better reading
+    clean_car_description = str(car_description).strip().upper().replace(" ","_")
 
 
     try:
-        
+
+        #if raport already exists get url from db:
+        report_url_db= get_ready_report_url_supabase_db(clean_car_description)
+        if report_url_db:
+            logger.info("got url from db")
+            return report_url_db
+
+        #mark status as processing as we are actually generating
+        MetadataRaports.objects.update_or_create(
+            car_model=clean_car_description,
+            defaults={'status':'PROCESSING'}
+        )
+
 
         #get raport from cache
         raw_info_data = get_raport_data_from_redis(car_description)
@@ -64,9 +67,6 @@ def generate_pdf_task(vin, car_description):
         #change pdf to bytes as supabase requiers
         pdf_file.seek(0)
         pdf_bytes = pdf_file.getvalue()
-
-        #replace spaces with floor for better reading
-        clean_car_description = str(car_description).strip().upper().replace(" ","_")
         
         file_name = f"report_{clean_car_description}.pdf"
 
@@ -101,11 +101,23 @@ def generate_pdf_task(vin, car_description):
 
     except SoftTimeLimitExceeded:
         logger.warning(f"Task generating pdf for {vin} was shout. Exceeded soft_time_limit (15s).")
+
+        #mark status as failrue in db
+        MetadataRaports.objects.update_or_create(
+            car_model= clean_car_description,
+            defaults={'status':'FAILURE'}
+        )
         raise  
 
 
     except Exception as e:
         logger.exception(f"Error during uploading file to supabase or genereting public URL: {e}")
+
+        #mark status as failrue in db
+        MetadataRaports.objects.update_or_create(
+            car_model= clean_car_description,
+            defaults={'status':'FAILURE'}
+        )
         raise
 
 
