@@ -7,7 +7,7 @@ from .models import MetadataRaports
 @admin.register(MetadataRaports)
 class MetadataReportsAdmin(admin.ModelAdmin):
 
-    readonly_fields=('id','created_at', 'updated_at', 'most_recent_download')
+    readonly_fields=('id','created_at', 'updated_at')
 
     list_display = [
         'id',
@@ -16,7 +16,6 @@ class MetadataReportsAdmin(admin.ModelAdmin):
         'supabase_url',
         'created_at',
         'updated_at',
-        'most_recent_download'
     ]
 
     list_filter = ['car_model','created_at']

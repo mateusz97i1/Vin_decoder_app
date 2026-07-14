@@ -18,11 +18,10 @@ class MetadataRaports(models.Model):
     id= models.UUIDField(primary_key=True, default= uuid.uuid4, editable= False)
 
     car_model=models.CharField(max_length=100, unique=True)
-    status= models.CharField(max_length=15, choices=STATUS_CHOICES)
+    status= models.CharField(max_length=15, choices=STATUS_CHOICES, default='PENDING')
     supabase_url=models.URLField(max_length=500, blank=True, null=True)
     created_at=models.DateTimeField(auto_now_add= True)
     updated_at= models.DateTimeField(auto_now= True)
-    most_recent_download= models.DateTimeField(auto_now= True)
     
     class Meta:
 
