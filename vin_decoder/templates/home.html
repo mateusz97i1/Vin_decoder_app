@@ -22,9 +22,94 @@
 </head>
 
 <body class="font-roboto">
+
+    <header class="flex flex-row items-center justify-between w-full h-16 px-6 bg-[#13212C]">
+        <!-- svg logo -->
+        <div>
+            <a href="{% url 'vin_decoder:home' %}">
+                <svg viewBox="0 0 660 210" xmlns="http://www.w3.org/2000/svg" class="w-auto h-10">
+
+                    <defs>
+                        <linearGradient id="plateShine" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#2A2F36" />
+                            <stop offset="55%" stop-color="#1B1F23" />
+                            <stop offset="100%" stop-color="#121519" />
+                        </linearGradient>
+                        <linearGradient id="scanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#0FB5C4" stop-opacity="0" />
+                            <stop offset="50%" stop-color="#2FE4D6" stop-opacity="0.95" />
+                            <stop offset="100%" stop-color="#0FB5C4" stop-opacity="0" />
+                        </linearGradient>
+                        <filter id="scanGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3.2" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <g>
+                        <rect x="18" y="25" width="150" height="150" rx="16" fill="url(#plateShine)" stroke="#8FA3AE"
+                            stroke-width="2" />
+                        <rect x="27" y="34" width="132" height="132" rx="10" fill="none" stroke="#3A4048"
+                            stroke-width="1" />
+                        <circle cx="33" cy="40" r="3.6" fill="#8FA3AE" />
+                        <circle cx="153" cy="40" r="3.6" fill="#8FA3AE" />
+                        <circle cx="33" cy="160" r="3.6" fill="#8FA3AE" />
+                        <circle cx="153" cy="160" r="3.6" fill="#8FA3AE" />
+                        <text x="93" y="128" text-anchor="middle" font-family="Arial Black, Helvetica, sans-serif"
+                            font-weight="900" font-size="92" fill="#F5F6F7">V</text>
+                        <g filter="url(#scanGlow)">
+                            <rect x="26" y="96" width="134" height="7" fill="url(#scanGrad)" />
+                        </g>
+                        <polygon points="18,99.5 26,94 26,105" fill="#2FE4D6" />
+                        <polygon points="168,99.5 160,94 160,105" fill="#2FE4D6" />
+                    </g>
+
+                    <g font-family="Arial Black, Helvetica, sans-serif">
+                        <text x="196" y="105" font-weight="900" font-size="66" letter-spacing="-1.5"
+                            fill="#F5F6F7">VINEX
+                            <tspan fill="#2FE4D6">-USA</tspan>
+                        </text>
+                    </g>
+
+                    <text x="199" y="132" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="15"
+                        letter-spacing="5" fill="#8FA3AE">VIN DECODER</text>
+
+                    <g fill="#8FA3AE">
+                        <rect x="199" y="148" width="3" height="20" fill="#0E1922" />
+                        <rect x="205" y="148" width="1.5" height="20" fill="#2FE4D6" />
+                        <rect x="210" y="148" width="4" height="20" fill="#0E1922" />
+                        <rect x="217" y="148" width="1.5" height="20" fill="#0E1922" />
+                        <rect x="222" y="148" width="2.5" height="20" fill="#2FE4D6" />
+                        <rect x="228" y="148" width="1.5" height="20" fill="#0E1922" />
+                        <rect x="233" y="148" width="5" height="20" fill="#0E1922" />
+                        <rect x="241" y="148" width="1.5" height="20" fill="#2FE4D6" />
+                        <rect x="246" y="148" width="3" height="20" fill="#0E1922" />
+                        <rect x="253" y="148" width="1.5" height="20" fill="#0E1922" />
+                        <rect x="258" y="148" width="2.5" height="20" fill="#2FE4D6" />
+                        <rect x="264" y="148" width="4" height="20" fill="#0E1922" />
+                        <rect x="271" y="148" width="1.5" height="20" fill="#0E1922" />
+                        <rect x="276" y="148" width="3" height="20" fill="#2FE4D6" />
+                        <rect x="283" y="148" width="1.5" height="20" fill="#0E1922" />
+                        <rect x="288" y="148" width="4" height="20" fill="#0E1922" />
+                        <rect x="296" y="148" width="1.5" height="20" fill="#2FE4D6" />
+                        <rect x="301" y="148" width="2.5" height="20" fill="#0E1922" />
+                    </g>
+                </svg>
+            </a>
+        </div>
+        <!-- home button -->
+        <div>
+            <p class="text-[#F5F6F7]">home btn</p>
+        </div>
+    </header>
+
     <div class="flex flex-col items-center justify-center bg-background min-h-svh">
 
         {% block authentication %}
+
 
         <div class="container flex flex-col px-4 py-8 mx-auto text-center ">
             <h1 class="mb-4 text-2xl font-bold cursor-pointer"> <a href="{% url 'vin_decoder:home' %}">Welcome to
