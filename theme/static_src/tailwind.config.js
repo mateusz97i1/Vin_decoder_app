@@ -53,10 +53,11 @@ module.exports = {
                 roboto: ['Roboto', 'sans-serif'],
             },
             colors: {
-                'primary': '#1A2238', //headers and navigation.
+                'primary': '#0E1922', //headers and navigation.
                 'status': '#FF3B30',//allert
-                'accent': '#007AFF',//buttons
+                'accent': '#0FB5C4',//buttons
                 'background': '#F2F2F7', //like so
+                'cyan': '#0FB5C4', //buttons
             },
 
         },

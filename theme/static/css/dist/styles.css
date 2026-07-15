@@ -1634,6 +1634,10 @@ input:where([type='file']):focus {
   height: 0.25rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-16 {
   height: 4rem;
 }
@@ -1690,6 +1694,10 @@ input:where([type='file']):focus {
   width: 2rem;
 }
 
+.w-auto {
+  width: auto;
+}
+
 .w-full {
   width: 100%;
 }
@@ -1735,6 +1743,10 @@ input:where([type='file']):focus {
   cursor: pointer;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -1749,6 +1761,10 @@ input:where([type='file']):focus {
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
 
 .gap-2 {
@@ -1835,11 +1851,6 @@ input:where([type='file']):focus {
   border-color: rgb(243 244 246 / var(--tw-border-opacity, 1));
 }
 
-.border-gray-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
-}
-
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
@@ -1855,9 +1866,14 @@ input:where([type='file']):focus {
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
+.bg-\[\#13212C\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(19 33 44 / var(--tw-bg-opacity, 1));
+}
+
 .bg-accent {
   --tw-bg-opacity: 1;
-  background-color: rgb(0 122 255 / var(--tw-bg-opacity, 1));
+  background-color: rgb(15 181 196 / var(--tw-bg-opacity, 1));
 }
 
 .bg-amber-100 {
@@ -1939,6 +1955,11 @@ input:where([type='file']):focus {
   padding-right: 1.25rem;
 }
 
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1974,10 +1995,6 @@ input:where([type='file']):focus {
 
 .pt-4 {
   padding-top: 1rem;
-}
-
-.text-left {
-  text-align: left;
 }
 
 .text-center {
@@ -2049,9 +2066,14 @@ input:where([type='file']):focus {
   letter-spacing: 0.05em;
 }
 
+.text-\[\#F5F6F7\] {
+  --tw-text-opacity: 1;
+  color: rgb(245 246 247 / var(--tw-text-opacity, 1));
+}
+
 .text-accent {
   --tw-text-opacity: 1;
-  color: rgb(0 122 255 / var(--tw-text-opacity, 1));
+  color: rgb(15 181 196 / var(--tw-text-opacity, 1));
 }
 
 .text-amber-700 {
@@ -2153,6 +2175,15 @@ input:where([type='file']):focus {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -2188,7 +2219,7 @@ input:where([type='file']):focus {
 
 .hover\:text-accent:hover {
   --tw-text-opacity: 1;
-  color: rgb(0 122 255 / var(--tw-text-opacity, 1));
+  color: rgb(15 181 196 / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-gray-600:hover {
@@ -2211,5 +2242,5 @@ input:where([type='file']):focus {
 }
 
 .focus\:ring-accent\/20:focus {
-  --tw-ring-color: rgb(0 122 255 / 0.2);
+  --tw-ring-color: rgb(15 181 196 / 0.2);
 }
