@@ -1558,6 +1558,14 @@ input:where([type='file']):focus {
   position: relative;
 }
 
+.z-30 {
+  z-index: 30;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -1658,12 +1666,24 @@ input:where([type='file']):focus {
   height: 2rem;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
 
 .min-h-svh {
   min-height: 100svh;
+}
+
+.w-10 {
+  width: 2.5rem;
 }
 
 .w-12 {
@@ -1700,6 +1720,10 @@ input:where([type='file']):focus {
 
 .w-full {
   width: 100%;
+}
+
+.w-64 {
+  width: 16rem;
 }
 
 .max-w-2xl {
@@ -1749,6 +1773,10 @@ input:where([type='file']):focus {
 
 .flex-col {
   flex-direction: column;
+}
+
+.place-items-center {
+  place-items: center;
 }
 
 .items-start {
@@ -1925,6 +1953,10 @@ input:where([type='file']):focus {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
+.fill-white {
+  fill: #fff;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -2064,11 +2096,6 @@ input:where([type='file']):focus {
 
 .tracking-wider {
   letter-spacing: 0.05em;
-}
-
-.text-\[\#F5F6F7\] {
-  --tw-text-opacity: 1;
-  color: rgb(245 246 247 / var(--tw-text-opacity, 1));
 }
 
 .text-accent {
