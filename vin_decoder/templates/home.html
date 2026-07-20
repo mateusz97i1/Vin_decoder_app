@@ -24,7 +24,7 @@
 <body class="font-roboto">
 
     <header class="z-30 flex flex-row items-center justify-between w-full h-16 px-6 bg-[#13212C]">
-        <!-- svg logo -->
+        <!-- svg logo vinex -->
         <div>
             <a href="{% url 'vin_decoder:home' %}">
                 <svg viewBox="0 0 660 210" xmlns="http://www.w3.org/2000/svg" class="z-40 w-auto h-10">
@@ -108,6 +108,18 @@
                         d="M540.76,254.788L294.506,38.216c-11.475-10.098-30.064-10.098-41.386,0L6.943,254.788   c-11.475,10.098-8.415,18.284,6.885,18.284h75.964v221.773c0,12.087,9.945,22.108,22.108,22.108h92.947V371.067   c0-12.087,9.945-22.108,22.109-22.108h93.865c12.239,0,22.108,9.792,22.108,22.108v145.886h92.947   c12.24,0,22.108-9.945,22.108-22.108v-221.85h75.965C549.021,272.995,552.081,264.886,540.76,254.788z" />
                 </svg>
             </a>
+            <!-- ALLAUTH LOGIC -->
+
+            <div class="flex flex-col font-bold">
+                {% if user.is_authenticated %}
+                <p>Witaj, {{ user.username }}!</p>
+                <a href="{% url 'account_logout' %}">Sign Out</a>
+                {% else %}
+                <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
+                <a href="{% url 'account_login' %}">Other logging options</a>
+                {% endif %}
+            </div>
+
         </div>
     </header>
 
@@ -152,7 +164,7 @@
                 </div>
 
                 <button type="submit"
-                    class="self-center px-5 py-2 mt-2 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
+                    class="self-center px-5 py-2 mt-2 mb-10 text-white capitalize transition-opacity rounded-xl bg-accent hover:opacity-90">
                     decode
                 </button>
             </form>
@@ -160,7 +172,7 @@
 
 
         <!-- #results section car info-->
-        <div>
+        <div class="flex flex-col items-center">
             {% if message_error %}
             <div class="">
                 <strong>Error:</strong> {{ message_error }}
@@ -168,32 +180,117 @@
 
 
             {% elif car_info %}
-            <h2>Results for: {{ vin }}</h2>
-            <p>Make: {{ car_info.Make }}</p>
-
-            {% if car_info.Model %}
-            <p>Model: {{ car_info.Model }}</p>
-            <p>Year: {{ car_info.ModelYear }}</p>
-            <p>Engine: {{ car_info.DisplacementL }} L</p>
-            <p>Cylinders: {{ car_info.EngineCylinders }}</p>
-            <p>Power: {{ car_info.EngineHP }} hp</p>
-            <p>Engine Model: {{ car_info.EngineModel }}</p>
-            <p>Drive Type: {{ car_info.DriveType }}</p>
-
-
-            <p>Get info</p>
-
-            <!-- ALLAUTH LOGIC -->
-
-            <div class="flex flex-col font-bold">
-                {% if user.is_authenticated %}
-                <p>Witaj, {{ user.username }}!</p>
-                <a href="{% url 'account_logout' %}">Sign Out</a>
-                {% else %}
-                <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
-                <a href="{% url 'account_login' %}">Other logging options</a>
-                {% endif %}
+            <div class="inline-flex items-center px-4 py-2 mb-6 space-x-2 border border-gray-200 rounded-lg bg-gray-50">
+                <span class="text-xs font-medium text-gray-500">Results For:</span>
+                <span class="font-mono text-sm font-bold tracking-wider text-gray-900">{{ vin }}</span>
             </div>
+
+
+            <!-- Car info data -->
+            {% if car_info.Model %}
+
+            <div class="overflow-hidden border rounded-lg bg-vinpanel border-vinline">
+                <p
+                    class="px-5 py-3 border-b border-vinline font-mono text-[11px] tracking-widest uppercase text-vindim">
+                    Build sheet</p>
+                <div class="grid grid-cols-4">
+
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Make</p>
+                        <p class="text-lg font-semibold font-display text-vinamber">{{ car_info.Make }}</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Model</p>
+                        <p class="text-lg font-semibold font-display">{{ car_info.Model }}</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Year</p>
+                        <p class="text-lg font-semibold font-display">{{ car_info.ModelYear }}</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Engine</p>
+                        <p class="text-lg font-semibold font-display">{{ car_info.DisplacementL }} L</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Cylinders</p>
+                        <p class="text-lg font-semibold font-display">{{ car_info.EngineCylinders }}</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Power</p>
+                        <p class="text-lg font-semibold font-display">{{ car_info.EngineHP }} hp</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Engine model</p>
+                        <p class="text-sm font-medium font-display text-vindim">{{ car_info.EngineModel }}</p>
+                    </div>
+                    <div class="px-5 py-4 border-b border-r border-vinline">
+                        <p class="font-mono text-[10px] tracking-wide uppercase text-vindim mb-1.5">Drive type</p>
+                        <p class="text-sm font-medium font-display text-vindim">{{ car_info.DriveType }}</p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Informations section -->
+            <div class="mt-6">
+                <h2 class="mb-4 text-lg font-bold text-center text-gray-800">Get more information about this car, for
+                    example:</h2>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <!-- CArd 1 price -->
+                    <div
+                        class="flex items-center gap-3 p-4 transition-shadow bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md">
+                        <div class="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
+                            <!--  currency-dollar -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-700">Average price</p>
+                            <p class="text-xs text-gray-400">Market value</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 milage-->
+                    <div
+                        class="flex items-center gap-3 p-4 transition-shadow bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md">
+                        <div class="p-2.5 bg-green-50 text-green-600 rounded-lg">
+                            <!--  chart-bar-->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-700">Average mileage</p>
+                            <p class="text-xs text-gray-400">By production year</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 problems -->
+                    <div
+                        class="flex items-center gap-3 p-4 transition-shadow bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg">
+                            <!-- Icon exclamation-triangle)-->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-700">Common issues</p>
+                            <p class="text-xs text-gray-400">What to look out for</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
 
 
