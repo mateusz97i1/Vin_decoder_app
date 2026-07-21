@@ -34,7 +34,7 @@
 
 <!-- save results as pdf file -->
 
-<div class="flex" id="raport-container">
+<div class="flex flex-col items-center" id="raport-container">
     <form hx-post="{% url 'vin_decoder:export_pdf' %}" hx-target="#raport-container" hx-swap="outerHTML">
         {% csrf_token %}
         <input type="hidden" name="vin" value="{{ vin }}">

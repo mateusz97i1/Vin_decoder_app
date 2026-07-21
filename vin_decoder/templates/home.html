@@ -21,9 +21,53 @@
     <title>home</title>
 </head>
 
-<body class="font-roboto">
+<body class="min-h-screen antialiased font-roboto h-fit">
+    <!-- TODO: OVERLAY -->
 
-    <header class="z-30 flex flex-row items-center justify-between w-full h-16 px-6 bg-[#13212C]">
+    <!-- burger menu navigation bar: activated -->
+    <nav
+        class="fixed right-0 px-4 top-0 z-[100] min-h-screen h-screen w-3/4 md:w-2/4 xl:w-1/4 text-white bg-navi flex flex-col">
+
+        <!-- top section inside navbar -->
+        <div class="flex flex-row items-center justify-between py-4">
+            <!-- welcome username -->
+            <div><a href="{% url 'vin_decoder:home' %}"
+                    class="text-xl font-bold transition-all duration-100 ease-in-out">
+                    {% if user.is_authenticated %}
+                    <p>Welcome, {{ user.username }}!</p>
+                    {% endif %}
+                </a>
+            </div>
+
+            <!-- close btn svg -->
+            <div class="flex flex-row ">
+                <svg class="w-auto h-8" id="close_btn" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-x size-4" aria-hidden="true">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- middle nav items (expands to fill space) -->
+        <div class="flex flex-col flex-1 gap-4 py-8">
+            <!-- Add your nav items here -->
+            <a href="#" class="hover:text-gray-300">Home</a>
+            <a href="#" class="hover:text-gray-300">About</a>
+            <a href="#" class="hover:text-gray-300">Contact</a>
+        </div>
+
+        <!-- bottom nav bar (stays at bottom) -->
+        <div class="flex flex-row py-4">
+            {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">Sign Out</a>
+            {% endif %}
+        </div>
+
+    </nav>
+
+    <header class="z-30 flex flex-row items-center justify-between w-full h-16 px-6 bg-navi">
         <!-- svg logo vinex -->
         <div>
             <a href="{% url 'vin_decoder:home' %}">
@@ -100,30 +144,38 @@
                 </svg>
             </a>
         </div>
-        <!-- home button -->
+        <!-- burger menu button -->
         <div>
-            <a href="{% url 'vin_decoder:home' %}">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 547 540" class="w-auto h-6 fill-white">
-                    <path
-                        d="M540.76,254.788L294.506,38.216c-11.475-10.098-30.064-10.098-41.386,0L6.943,254.788   c-11.475,10.098-8.415,18.284,6.885,18.284h75.964v221.773c0,12.087,9.945,22.108,22.108,22.108h92.947V371.067   c0-12.087,9.945-22.108,22.109-22.108h93.865c12.239,0,22.108,9.792,22.108,22.108v145.886h92.947   c12.24,0,22.108-9.945,22.108-22.108v-221.85h75.965C549.021,272.995,552.081,264.886,540.76,254.788z" />
-                </svg>
-            </a>
-            <!-- ALLAUTH LOGIC -->
-
-            <div class="flex flex-col font-bold">
-                {% if user.is_authenticated %}
-                <p>Witaj, {{ user.username }}!</p>
-                <a href="{% url 'account_logout' %}">Sign Out</a>
-                {% else %}
-                <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
-                <a href="{% url 'account_login' %}">Other logging options</a>
-                {% endif %}
-            </div>
+            <svg class="w-auto h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC"
+                    stroke-width="0.048"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M4 5C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H4ZM7 12C7 11.4477 7.44772 11 8 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H8C7.44772 13 7 12.5523 7 12ZM13 18C13 17.4477 13.4477 17 14 17H20C20.5523 17 21 17.4477 21 18C21 18.5523 20.5523 19 20 19H14C13.4477 19 13 18.5523 13 18Z"
+                        fill="#ffffff"></path>
+                </g>
+            </svg>
 
         </div>
     </header>
 
+    <!-- main page -->
+
     <div class="flex flex-col items-center justify-center w-full bg-background min-h-svh">
+
+        <!-- ALLAUTH LOGIC -->
+
+        <div class="flex flex-col font-bold">
+            {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'account_logout' %}">Sign Out</a>
+            {% else %}
+            <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
+            <a href="{% url 'account_login' %}">Other logging options</a>
+            {% endif %}
+        </div>
+
 
         {% block authentication %}
 
@@ -131,16 +183,17 @@
         <div class="container flex flex-col px-4 py-8 mx-auto text-center place-items-center ">
 
             <!-- #logo -->
-            <svg viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg" class="w-64 h-auto">
-                <g font-family="Arial Black, Helvetica, sans-serif">
-                    <text x="10" y="90" font-weight="900" font-size="66" letter-spacing="-1.5" fill="#13212C">VINEX
-                        <tspan fill="#2FE4D6">-USA</tspan>
-                    </text>
-                </g>
-            </svg>
+            <a href="{% url 'vin_decoder:home' %}">
+                <svg viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg" class="w-64 h-auto">
+                    <g font-family="Arial Black, Helvetica, sans-serif">
+                        <text x="10" y="90" font-weight="900" font-size="66" letter-spacing="-1.5" fill="#13212C">VINEX
+                            <tspan fill="#2FE4D6">-USA</tspan>
+                        </text>
+                    </g>
+                </svg>
+            </a>
 
-            <h1 class="mb-4 text-2xl font-bold cursor-pointer"> <a href="{% url 'vin_decoder:home' %}">
-                    Car VIN Decoder</a></h1>
+            <h1 class="mb-4 text-2xl font-bold cursor-pointer"> Car VIN Decoder</h1>
             <p>We are a team of car enthusiasts dedicated to providing you with the best VIN decoding experience.</p>
         </div>
         <!-- #decode form butoon and input -->

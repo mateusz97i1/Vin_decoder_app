@@ -58,6 +58,7 @@ module.exports = {
                 'accent': '#0FB5C4',//buttons
                 'background': '#F2F2F7', //like so
                 'cyan': '#0FB5C4', //buttons
+                'navi': '#0E1922', //navigation
             },
 
         },
