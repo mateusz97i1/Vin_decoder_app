@@ -1,8 +1,9 @@
 <div id="pdf-download-container" hx-get="/check_task_status/{{ task_id }}/" hx-trigger="every 500ms" hx-target="this"
     hx-swap="outerHTML">
 
-    <div class="flex items-center space-x-2">
+    <div class="flex flex-col items-center space-x-2">
         <p>Current Status: <strong>{{ status }}</strong></p>
+        <p>Generating your car report PDF. Please wait...</p>
     </div>
-    <p>Generating your car report PDF. Please wait...</p>
+
 </div>
