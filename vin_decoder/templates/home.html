@@ -25,7 +25,7 @@
     <!-- TODO: OVERLAY -->
 
     <!-- burger menu navigation bar: activated -->
-    <nav
+    <nav id="burger_menu"
         class="fixed right-0 px-4 top-0 z-[100] min-h-screen h-screen w-3/4 md:w-2/4 xl:w-1/4 text-white bg-navi flex flex-col">
 
         <!-- top section inside navbar -->
@@ -40,7 +40,7 @@
             </div>
 
             <!-- close btn svg -->
-            <div class="flex flex-row ">
+            <div id="close_burger_menu_icon" class="flex flex-row cursor-pointer ">
                 <svg class="w-auto h-8" id="close_btn" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" class="lucide lucide-x size-4" aria-hidden="true">
@@ -145,7 +145,7 @@
             </a>
         </div>
         <!-- burger menu button -->
-        <div>
+        <div id="burgermenu_icon">
             <svg class="w-auto h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC"
@@ -375,6 +375,39 @@
 
         {% endblock authentication %}
     </div>
+
+    <!-- close burger menu -->
+
+    <script>
+
+        const burger_menu = document.getElementById('burger_menu')
+        const close_menu_icon = document.getElementById('close_burger_menu_icon')
+        const open_burgermenu_icon = document.getElementById('burgermenu_icon')
+
+
+        close_menu_icon.addEventListener('click', () => {
+
+            gsap.to(burger_menu, {
+                x: "100%",
+                autoAlpha: 0,
+                duration: 0.2,
+                ease: 'power2.out'
+            });
+
+        });
+
+        open_burgermenu_icon.addEventListener('click', () => {
+
+            gsap.to(burger_menu, {
+                x: "0",
+                autoAlpha: 1,
+                duration: 0.2,
+                ease: 'power2.out'
+            });
+
+        });
+
+    </script>
 
 
 </body>
