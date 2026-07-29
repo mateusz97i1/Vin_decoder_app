@@ -1550,8 +1550,12 @@ input:where([type='file']):focus {
   pointer-events: none;
 }
 
-.pointer-events-auto {
-  pointer-events: auto;
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 .static {
@@ -1604,6 +1608,21 @@ input:where([type='file']):focus {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.my-12 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .mb-1\.5 {
@@ -1724,6 +1743,19 @@ input:where([type='file']):focus {
   min-height: 100svh;
 }
 
+.min-h-2\.5 {
+  min-height: 0.625rem;
+}
+
+.min-h-40 {
+  min-height: 10rem;
+}
+
+.min-h-fit {
+  min-height: -moz-fit-content;
+  min-height: fit-content;
+}
+
 .w-12 {
   width: 3rem;
 }
@@ -1762,6 +1794,10 @@ input:where([type='file']):focus {
 
 .w-full {
   width: 100%;
+}
+
+.w-4\/5 {
+  width: 80%;
 }
 
 .max-w-2xl {
@@ -1825,6 +1861,10 @@ input:where([type='file']):focus {
   place-items: center;
 }
 
+.content-between {
+  align-content: space-between;
+}
+
 .items-start {
   align-items: flex-start;
 }
@@ -1853,6 +1893,10 @@ input:where([type='file']):focus {
   gap: 1rem;
 }
 
+.gap-12 {
+  gap: 3rem;
+}
+
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -1877,14 +1921,6 @@ input:where([type='file']):focus {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
-.overflow-y-hidden {
-  overflow-y: hidden;
 }
 
 .rounded-2xl {
@@ -2024,6 +2060,15 @@ input:where([type='file']):focus {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 25 34 / var(--tw-bg-opacity, 1));
+}
+
+.fill-white {
+  fill: #fff;
 }
 
 .p-2 {
@@ -2374,6 +2419,10 @@ input:where([type='file']):focus {
 .hover\:bg-gray-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:fill-white\/70:hover {
+  fill: rgb(255 255 255 / 0.7);
 }
 
 .hover\:text-accent:hover {
