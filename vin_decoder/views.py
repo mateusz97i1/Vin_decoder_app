@@ -180,3 +180,8 @@ def check_task_status(request, task_id):
         "partials/pdf_download_failed.html",
         context={"failed_info": str(res.info)},
     )
+
+
+def contanct_view(request):
+
+    return render(request, 'contact.html')
