@@ -1,0 +1,255 @@
+{% extends 'home.html' %}
+
+
+{% block authentication %}
+
+<div class="flex flex-col items-center min-h-screen gap-4 mx-auto my-8">
+
+
+    <main class="grid max-w-6xl grid-cols-1 gap-8 px-6 py-12 mx-auto lg:grid-cols-4">
+        <!-- Sidebar / Table of Contents -->
+        <div class="flex flex-col">
+
+            <nav class="sticky self-center col-span-1 top-24">
+                <!-- pprivacy policy box -->
+                <div class="flex-col max-w-6xl p-5 px-6 py-6 mx-auto bg-white border rounded-lg shadow-sm">
+
+                    <div class="flex flex-col justify-center text-sm text-center text-gray-500">
+                        <div>Privacy Policy (GDPR)</div>
+                        <div>Last Updated: <strong class="text-gray-800">25-07-2026</strong></div>
+                        <div>Effective Date: <strong class="text-gray-800">25-07-2026</strong></div>
+                    </div>
+                    <!-- change pricavy option -->
+                    <div class="flex justify-center py-2 space-x-2">
+                        <span class="text-gray-700">Off/On:</span>
+                        <!-- TODO: Cookies switch -->
+
+                    </div>
+                </div>
+                <!-- table of contents -->
+                <div class="hidden p-5 bg-white border rounded-lg shadow-sm lg:block">
+                    <h2 class="mb-3 text-sm font-semibold text-gray-700">Table of Contents</h2>
+                    <ul class="space-y-2 text-sm">
+                        <li><a class="text-blue-600 hover:underline" href="#admin">1. Data Controller</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#data">2. Data We Collect</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#purposes">3. Purposes and Legal Basis</a>
+                        </li>
+                        <li><a class="text-blue-600 hover:underline" href="#cookies">4. Cookies</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#recipients">5. Data Recipients</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#transfer">6. International Transfers</a>
+                        </li>
+                        <li><a class="text-blue-600 hover:underline" href="#retention">7. Data Retention</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#rights">8. Your Rights</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#profiling">9. Profiling</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#security">10. Security</a></li>
+                        <li><a class="text-blue-600 hover:underline" href="#contact">11. Data Protection Contact</a>
+                        </li>
+                        <li><a class="text-blue-600 hover:underline" href="#changes">12. Changes to This Policy</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+        </div>
+
+
+        <!-- Main Content -->
+        <article class="col-span-1 space-y-8 lg:col-span-3">
+
+            <!-- Intro -->
+            <section id="intro" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h2 class="mb-2 text-2xl font-bold">Privacy Policy — Vinex</h2>
+                <p class="mb-4 text-sm text-gray-600">
+                    This Privacy Policy explains how <strong>Vinex</strong> processes personal data in accordance
+                    with the GDPR (General Data Protection Regulation).
+                </p>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="p-4 border rounded-md bg-gray-50">
+                        <h3 class="text-sm font-semibold">Data Controller</h3>
+                        <p class="mt-2 text-sm text-gray-700">
+                            <strong>Vinex</strong><br />
+                            Mielec, Małopolska 34-340, Poland<br />
+                            E-mail: <a class="text-blue-600 hover:underline"
+                                href="mailto:mateuszBig@gmial.pl">mateuszBig@gmial.pl</a><br />
+                            Phone: <a href="tel:+48663564234" class="text-blue-600 hover:underline">+48 663 564 234</a>
+                        </p>
+                    </div>
+
+                    <div class="p-4 border rounded-md bg-gray-50">
+                        <h3 class="text-sm font-semibold">Dates</h3>
+                        <p class="mt-2 text-sm text-gray-700">
+                            Last Updated: <strong>25-08-2026</strong><br />
+                            Effective Date: <strong>25-08-2026</strong>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1 -->
+            <section id="admin" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">1. Data Controller</h3>
+                <p class="text-gray-700">
+                    The Data Controller responsible for your personal information is <strong>Vinex</strong>.
+                    The Controller determines the purposes and means of data processing.
+                </p>
+            </section>
+
+            <!-- 2 -->
+            <section id="data" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">2. Data We Collect</h3>
+                <div class="space-y-4 text-gray-700">
+                    <div>
+                        <h4 class="font-medium">2.1 Data You Provide Voluntarily</h4>
+                        <p class="mt-1 text-sm">E-mail address, messages sent via forms, content submitted to the
+                            application, and any other information you choose to provide.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium">2.2 Data Collected Automatically</h4>
+                        <p class="mt-1 text-sm">IP address, browser type, OS, device details, cookies, log files,
+                            timestamps.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium">2.3 Analytics and Technical Data</h4>
+                        <p class="mt-1 text-sm">Data processed by analytics tools, hosting infrastructure, security
+                            systems, or AI models.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3 -->
+            <section id="purposes" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">3. Purposes and Legal Basis</h3>
+                <ul class="pl-5 space-y-3 text-gray-700 list-disc">
+                    <li><strong>Service delivery (application functionality and communication):</strong>
+                        Legal basis: Art.6(1)(b) GDPR — performance of a contract or steps prior to a contract.
+                    </li>
+                    <li><strong>Analytics and service improvement:</strong>
+                        Legal basis: Art.6(1)(f) GDPR — legitimate interest.
+                    </li>
+                    <li><strong>Security and fraud prevention:</strong>
+                        Legal basis: Art.6(1)(f) GDPR — legitimate interest.
+                    </li>
+                    <li><strong>Marketing and personalization (if used):</strong>
+                        Legal basis: Art.6(1)(a) GDPR — consent.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 4 -->
+            <section id="cookies" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">4. Cookies and Tracking Technologies</h3>
+                <p class="mb-3 text-gray-700">
+                    This website uses necessary, analytical, and (optionally) marketing cookies.
+                    Details can be found in our <a class="text-blue-600 hover:underline"
+                        href="https://travel-ai-app-production.up.railway.app/">Cookie Policy</a>.
+                </p>
+            </section>
+
+            <!-- 5 -->
+            <section id="recipients" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">5. Data Recipients</h3>
+                <p class="text-gray-700">Your data may be transferred to:</p>
+                <ul class="pl-5 mt-3 text-gray-700 list-disc">
+                    <li>hosting providers (e.g., Railway),</li>
+                    <li>analytics providers (e.g., Google Analytics),</li>
+                    <li>email and communication service providers,</li>
+                    <li>AI service providers (e.g., OpenAI API).</li>
+                </ul>
+            </section>
+
+            <!-- 6 -->
+            <section id="transfer" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">6. International Data Transfers</h3>
+                <p class="text-gray-700">
+                    Some service providers may be located outside the European Economic Area (EEA), including the United
+                    States.
+                    Transfers are performed under:
+                </p>
+                <ul class="pl-5 mt-3 text-gray-700 list-disc">
+                    <li>adequacy decisions,</li>
+                    <li>Standard Contractual Clauses (SCCs) + safeguards.</li>
+                </ul>
+            </section>
+
+            <!-- 7 -->
+            <section id="retention" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">7. Data Retention</h3>
+                <ul class="pl-5 space-y-2 text-gray-700 list-disc">
+                    <li>Server logs — up to 12 months</li>
+                    <li>Contact data — up to 6 months after last communication</li>
+                    <li>Data based on consent — until withdrawal</li>
+                    <li>Analytics data — according to tool configuration</li>
+                </ul>
+            </section>
+
+            <!-- 8 -->
+            <section id="rights" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">8. Your Rights</h3>
+                <p class="text-gray-700">Under the GDPR, you have the right to:</p>
+                <ul class="pl-5 mt-3 space-y-2 text-gray-700 list-disc">
+                    <li>access your data,</li>
+                    <li>rectify incorrect data,</li>
+                    <li>erase data (“right to be forgotten”),</li>
+                    <li>restrict processing,</li>
+                    <li>data portability,</li>
+                    <li>object to processing,</li>
+                    <li>withdraw consent at any time,</li>
+                    <li>file a complaint with the Supervisory Authority (Poland: PUODO).</li>
+                </ul>
+                <p class="mt-4 text-gray-700">
+                    To exercise your rights, contact us at:
+                    <a class="text-blue-600 hover:underline" href="mailto:mateusz99i1@wp.pl">mateusz19@gma.pl</a>.
+                </p>
+            </section>
+
+            <!-- 9 -->
+            <section id="profiling" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">9. Profiling and Automated Decisions</h3>
+                <p class="text-gray-700">
+                    Vinex may generate personalized responses based on user input.
+                    No automated decisions are made that produce legal or significant effects.
+                </p>
+            </section>
+
+            <!-- 10 -->
+            <section id="security" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">10. Data Security</h3>
+                <p class="text-gray-700">
+                    We apply appropriate technical and organizational measures to protect your data.
+                    However, no transmission method over the Internet is entirely secure.
+                </p>
+            </section>
+
+            <!-- 11 -->
+            <section id="contact" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">11. Data Protection Contact</h3>
+                <p class="text-gray-700">
+                    For privacy-related questions, please contact our Data Protection Officer:<br>
+                    <strong>E-mail:</strong>
+                    <a class="text-blue-600 hover:underline" href="mailto:mateusz99i1@wp.pl">mateuszBIGcc@ggmm.pl</a>
+                </p>
+            </section>
+
+            <!-- 12 -->
+            <section id="changes" class="p-8 bg-white border rounded-lg shadow-sm">
+                <h3 class="mb-3 text-xl font-semibold">12. Changes to This Privacy Policy</h3>
+                <p class="text-gray-700">
+                    We may update this Policy.
+                    Updated versions will be posted on this page and will become effective 180 days after publication.
+                </p>
+            </section>
+
+            <p class="text-sm italic text-center text-gray-500">
+                Privacy Policy partially supported by CookieYes generator.
+            </p>
+
+        </article>
+    </main>
+
+
+</div>
+
+
+{% endblock authentication %}

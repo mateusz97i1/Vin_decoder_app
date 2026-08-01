@@ -30,14 +30,41 @@
 
         <!-- top section inside navbar -->
         <div class="flex flex-row items-center justify-between py-4">
+
+
             <!-- welcome username -->
-            <div><a href="{% url 'vin_decoder:home' %}"
-                    class="text-xl font-bold transition-all duration-100 ease-in-out">
+            <div class="flex">
+                <a href="{% url 'account_login' %}"
+                    class="flex flex-col items-start text-xl font-bold transition-all duration-100 ease-in-out">
+
                     {% if user.is_authenticated %}
-                    <p>Welcome, {{ user.username }}!</p>
+                    <!-- user svg -->
+                    <svg class="w-auto h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        stroke="#ffffff">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
+                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                            <path
+                                d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
+                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                            <path
+                                d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42004 12.56 8.42004 10.58C8.42004 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z"
+                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </svg>
+                    <p class="py-2">Welcome, {{ user.username }}!</p>
+                    {% else %}
+                    <p class="underline ">Sign In / Create Account</p>
                     {% endif %}
                 </a>
             </div>
+
 
             <!-- close btn svg -->
             <div id="close_burger_menu_icon" class="flex flex-row cursor-pointer ">
@@ -50,13 +77,49 @@
             </div>
         </div>
 
+
         <!-- middle nav items (expands to fill space) -->
-        <div class="flex flex-col flex-1 gap-4 py-8">
-            <!-- nav items here -->
-            <a href="#" class="hover:text-gray-300">Home</a>
-            <a href="#" class="hover:text-gray-300">About</a>
-            <a href="#" class="hover:text-gray-300">Contact</a>
-        </div>
+        <nav aria-label="Primary" class="flex flex-col items-center gap-4 py-8 text-xl">
+            <ul class="flex flex-col items-center gap-4">
+                <li>
+                    <a href="/"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300"
+                        aria-current="page">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vin_decoder:about_us' %}"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300">
+                        About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="/contact"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300">
+                        Contact
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vin_decoder:privacy_policy' %}"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300">
+                        Privacy Policy
+                    </a>
+                </li>
+                <li>
+                    <a href="/contact"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300">
+                        Account
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'vin_decoder:rules' %}"
+                        class="transition-colors hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300">
+                        Rules
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
         <!-- bottom nav bar (stays at bottom) -->
         <div class="flex flex-row py-4">
@@ -68,6 +131,8 @@
     </nav>
 
     <header class="z-30 flex flex-row items-center justify-between w-full h-16 px-6 bg-navi">
+
+
         <!-- svg logo vinex -->
         <div>
             <a href="{% url 'vin_decoder:home' %}">
@@ -144,6 +209,8 @@
                 </svg>
             </a>
         </div>
+
+
         <!-- burger menu button -->
         <div id="burgermenu_icon">
             <svg class="w-auto h-8 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -161,27 +228,17 @@
         </div>
     </header>
 
-    <!-- main page -->
 
+    <!-- main page -->
     <div class="flex flex-col items-center justify-center w-full bg-background min-h-dvh">
 
-        <!-- ALLAUTH LOGIC -->
-
-        <div class="flex flex-col font-bold">
-            {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}!</p>
-            <a href="{% url 'account_logout' %}">Sign Out</a>
-            {% else %}
-            <a href="{% provider_login_url 'google' %}">Sign in via Google</a>
-            <a href="{% url 'account_login' %}">Other logging options</a>
-            {% endif %}
-        </div>
 
 
         {% block authentication %}
 
 
         <div class="container flex flex-col px-4 py-8 mx-auto text-center place-items-center ">
+
 
             <!-- #logo -->
             <a href="{% url 'vin_decoder:home' %}">
@@ -197,6 +254,8 @@
             <h1 class="mb-4 text-2xl font-bold cursor-pointer"> Car VIN Decoder</h1>
             <p>We are a team of car enthusiasts dedicated to providing you with the best VIN decoding experience.</p>
         </div>
+
+
         <!-- #decode form butoon and input -->
         <div>
             <form method="get" class="flex flex-col gap-4 ">
@@ -292,6 +351,7 @@
                     example:</h2>
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
                     <!-- CArd 1 price -->
                     <div
                         class="flex items-center gap-3 p-4 transition-shadow bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md">
@@ -376,11 +436,13 @@
             {% endif %}
         </div>
 
+
+        {% endblock authentication %}
         <!-- blank space between fotter and reports -->
         <div id="partial_typical_issues_response" class="min-h-[120px] mt-4 mb-16">
         </div>
 
-        {% endblock authentication %}
+
     </div>
 
 
@@ -417,7 +479,7 @@
             <div class="flex flex-col gap-2 text-left">
                 <p class="mb-1 text-xs tracking-wide uppercase text-white/60">Company</p>
                 <a href="" class="transition-colors hover:text-white/70">Home</a>
-                <a href="" class="transition-colors hover:text-white/70">Privacy Security</a>
+                <a href="" class="transition-colors hover:text-white/70">Privacy policy</a>
                 <a href="" class="transition-colors hover:text-white/70">Rules</a>
             </div>
 
