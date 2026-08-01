@@ -1,0 +1,67 @@
+{% extends 'home.html' %}
+
+{% block authentication %}
+<div class="container flex flex-col px-4 py-12 mx-auto text-center place-items-center">
+
+    <h1 class="mb-4 text-3xl font-bold text-gray-900">Terms & Rules</h1>
+    <p class="max-w-2xl mb-10 text-gray-600">
+        By using Vinex-USA, you agree to the terms below. Please read them carefully —
+        they explain what you can expect from us, and what we expect from you.
+    </p>
+
+    <div class="max-w-2xl space-y-8 text-left">
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">1. Use of Service</h2>
+            <p class="text-gray-600">
+                Vinex-USA provides VIN decoding and related vehicle information for personal,
+                informational use. You may not use the service to scrape, resell, or
+                redistribute our data without written permission.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">2. Accuracy of Information</h2>
+            <p class="text-gray-600">
+                We source data from manufacturer records and third-party providers, but we
+                cannot guarantee 100% accuracy at all times. Results should be used as a
+                reference, not as a substitute for a professional vehicle inspection.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">3. Account Responsibility</h2>
+            <p class="text-gray-600">
+                If you create an account, you're responsible for keeping your login details
+                secure and for any activity that happens under your account.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">4. Acceptable Use</h2>
+            <p class="text-gray-600">
+                Do not use Vinex-USA for unlawful purposes, to submit fraudulent VINs, or to
+                attempt to disrupt or reverse-engineer our systems.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">5. Changes to These Rules</h2>
+            <p class="text-gray-600">
+                We may update these rules from time to time. Continued use of the site after
+                changes are posted means you accept the updated terms.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="mb-3 text-xl font-bold text-gray-900">6. Contact</h2>
+            <p class="text-gray-600">
+                Questions about these rules? Reach out via our
+                <a href="/contact" class="text-accent hover:underline">Contact page</a>.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+{% endblock authentication %}

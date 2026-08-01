@@ -180,3 +180,23 @@ def check_task_status(request, task_id):
         "partials/pdf_download_failed.html",
         context={"failed_info": str(res.info)},
     )
+
+
+def contanct_view(request):
+
+    return render(request, 'contact.html')
+
+
+def about_us(request):
+
+    return render(request, 'about_us.html')
+
+
+def privacy_policy(request):
+
+    return render(request, 'privacy_policy.html')
+
+
+def rules(request):
+
+    return render(request, 'rules.html')

@@ -8,4 +8,8 @@ urlpatterns = [
     path('get_car_issues', views.openai_common_car_issues, name= "get_car_issues"), #urls for partial too
     path('export_pdf', views.export_vin_raport_pdf, name= 'export_pdf'),
     path('check_task_status/<str:task_id>/', views.check_task_status, name='check_task_status'),
+    path('contact',views.contanct_view, name='contact'),
+    path('about_us',views.about_us, name='about_us'),
+    path('privacy_policy',views.privacy_policy, name='privacy_policy'),
+    path('rules',views.rules, name='rules'),
 ]
