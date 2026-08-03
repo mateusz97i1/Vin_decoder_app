@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from supabase import create_client, Client
 from celery.exceptions import SoftTimeLimitExceeded
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 
 from .utils import generate_car_raport_pdf, get_raport_data_from_redis
 from .services import get_ready_report_url_supabase_db
@@ -158,6 +158,36 @@ def send_async_email(self, email_data):
     except (smtplib.SMTPException, socket.error) as e:
         logger.error(f"Smpt error sending email{e}")
         raise self.retry(exc=e)
+
+    except Exception as e:
+        logger.error(f'Error during sending error {e}')
+        raise
+
+
+
+@shared_task(
+    bind= True,
+    autoretry_for=(smtplib.SMTPException, socket.error),
+    retry_kwargs={'max_retries': 5},
+    retry_backoff = True,
+    retry_backoff_max = 100,
+    rate_limit='4/m',
+    queue='newsletter_join_email'
+)
+def join_newsletter(self, receiver_email):
+
+    "Sends greating email for joining to newsletter"
+
+    try:
+
+        send_mail(
+            subject = "Vinex Newsletter",
+            message = "Thank You for Subscribing to out newsletter",
+            from_email = None,
+            recipient_list = [receiver_email],
+            fail_silently= False
+
+        )
 
     except Exception as e:
         logger.error(f'Error during sending error {e}')
