@@ -13,7 +13,7 @@ from django.http import HttpResponse
 
 from .forms import InputVinForm
 from .services import get_vehicle_data_vin, openai_prompt_basic
-from .tasks import generate_pdf_task
+from .tasks import generate_pdf_task, join_newsletter
 
 # create logger
 logger = logging.getLogger(__name__)
@@ -200,3 +200,15 @@ def privacy_policy(request):
 def rules(request):
 
     return render(request, 'rules.html')
+
+@require_POST
+def thanks_for_newsletter_subscription(request):
+
+    "Show box with thaks and sends greating email to new newsletter subscriber using celery worker"
+
+    subscription = request.POST.get("subscribe_newsletter")
+    send_email_to = request.POST.get("send_email_to")
+
+    if subscription:
+
+        return render(request,'partials/thanks_for_sub_newsletter.html',context={'email':send_email_to})
