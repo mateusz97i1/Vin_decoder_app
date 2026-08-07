@@ -9,11 +9,14 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from celery.result import AsyncResult
 from django.http import HttpResponse
+from django.db import IntegrityError
 
 
-from .forms import InputVinForm
+
+from .forms import InputVinForm, NewsletterSubscriberForm
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from .tasks import generate_pdf_task, join_newsletter
+from . models import NewsletterSubscriber
 
 # create logger
 logger = logging.getLogger(__name__)
@@ -201,14 +204,42 @@ def rules(request):
 
     return render(request, 'rules.html')
 
+
+
+
 @require_POST
 def thanks_for_newsletter_subscription(request):
+    """Validates email and, if valid, shows thanks + queues welcome email via celery"""
 
-    "Show box with thaks and sends greating email to new newsletter subscriber using celery worker"
+    email_form = NewsletterSubscriberForm(request.POST)
 
-    subscription = request.POST.get("subscribe_newsletter")
-    send_email_to = request.POST.get("send_email_to")
+    if email_form.is_valid():
+        email_adress = email_form.cleaned_data['send_email_to']
 
-    if subscription:
+        try:
+            NewsletterSubscriber.objects.create(email=email_adress)
+        except IntegrityError:
+            return render(
+                request,
+                'partials/newsletter_block.html',
+                context={
+                    'success': False,
+                    'email_form': email_form,
+                    'error': 'This email has been already used.',
+                },
+            )
 
-        return render(request,'partials/thanks_for_sub_newsletter.html',context={'email':send_email_to})
+        join_newsletter.delay(email_adress)
+        return render(
+            request,
+            'partials/newsletter_block.html',
+            context={'success': True, 'email': email_adress},
+        )
+
+    else:
+        logger.warning(f"Error- can't issue newsletter subscription: {email_form.errors}")
+        return render(
+            request,
+            'partials/newsletter_block.html',
+            context={'success': False, 'email_form': email_form}
+        )

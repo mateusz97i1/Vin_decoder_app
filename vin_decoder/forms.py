@@ -1,6 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
 
+from .models import NewsletterSubscriber
+
 
 vin_validator_no_IOQ_letters =RegexValidator(
     regex=r'^[A-HJ-NPR-Z0-9]{17}$',
@@ -29,3 +31,16 @@ class InputVinForm(forms.Form):
         # just for testing purposes, you can remove it later
         initial= "WF0DP3TH6H4123982" 
     )
+
+
+class NewsletterSubscriberForm(forms.Form):
+
+    """Checks if given email is valid in order to send newsletter"""
+
+    send_email_to= forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'placeholder':'name@example.com',
+            'class': 'w-full bg-transparent text-white placeholder-white/50 text-sm outline-none border-0',
+            })
+        )
+

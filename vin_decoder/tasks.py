@@ -176,13 +176,13 @@ def send_async_email(self, email_data):
 )
 def join_newsletter(self, receiver_email):
 
-    "Sends greating email for joining to newsletter"
+    """Sends greating email for joining to newsletter"""
 
     try:
 
         send_mail(
             subject = "Vinex Newsletter",
-            message = "Thank You for Subscribing to out newsletter",
+            message = "Thank You for Subscribing to our newsletter",
             from_email = None,
             recipient_list = [receiver_email],
             fail_silently= False
