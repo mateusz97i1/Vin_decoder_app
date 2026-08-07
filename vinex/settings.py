@@ -102,6 +102,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #email form context processor for newsletter
+                'vin_decoder.context_processors.newsletter_form'
             ],
         },
     },
