@@ -38,26 +38,30 @@
                     class="flex flex-col items-start text-xl font-bold transition-all duration-100 ease-in-out">
 
                     {% if user.is_authenticated %}
-                    <!-- user svg -->
-                    <svg class="w-auto h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        stroke="#ffffff">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
-                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                            <path
-                                d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
-                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                            <path
-                                d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42004 12.56 8.42004 10.58C8.42004 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z"
-                                stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </g>
-                    </svg>
+                    <a href="{% url 'account_logout' %}"
+                        class="flex flex-col items-start text-xl font-bold transition-all duration-100 ease-in-out">
+                        <!-- user svg -->
+                        <svg class="w-auto h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            stroke="#ffffff">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
+                                    stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                                <path
+                                    d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
+                                    stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                                <path
+                                    d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42004 12.56 8.42004 10.58C8.42004 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z"
+                                    stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                            </g>
+                        </svg>
+                    </a>
+
                     <p class="py-2">Welcome, {{ user.username }}!</p>
                     {% else %}
                     <p class="underline ">Sign In / Create Account</p>
@@ -79,7 +83,7 @@
 
 
         <!-- middle nav items (expands to fill space) -->
-        <nav aria-label="Primary" class="flex flex-col items-center gap-4 py-8 text-xl">
+        <nav aria-label="Primary" class="flex flex-col items-center flex-1 gap-4 py-8 text-xl">
             <ul class="flex flex-col items-center gap-4">
                 <li>
                     <a href="/"
@@ -296,7 +300,7 @@
             <!-- Car info data -->
             {% if car_info.Model %}
 
-            <div class="overflow-hidden border rounded-lg bg-vinpanel border-vinline">
+            <div class="w-5/6 overflow-hidden border rounded-lg md:w-full bg-vinpanel border-vinline">
                 <p
                     class="px-5 py-3 border-b border-vinline font-mono text-[11px] tracking-widest uppercase text-vindim">
                     Build sheet</p>
@@ -340,7 +344,7 @@
 
 
             <!-- Informations section -->
-            <div class="mt-6">
+            <div class="w-5/6 mt-6 md:w-full">
                 <h2 class="mb-4 text-lg font-bold text-center text-gray-800">Get more information about this car, for
                     example:</h2>
 
@@ -404,7 +408,7 @@
 
             <!-- buttons for AI typical issues, price range and millage range -->
             <form hx-post="{% url 'vin_decoder:get_car_issues' %}" hx-target="#partial_typical_issues_response"
-                hx-swap="innerHTML" class="py-4">
+                hx-swap="innerHTML" hx-indicator=".search-loader" class="py-4">
                 {% csrf_token %}
                 <input type="hidden" name="vin" value="{{ vin }}">
                 <input type="hidden" name="car_description"
@@ -415,6 +419,7 @@
                     Generate full raport
                 </button>
             </form>
+
 
 
             <!-- partial redner typical issues -->
@@ -432,6 +437,25 @@
 
 
         {% endblock authentication %}
+        <!-- AI stars animation-indicator -->
+        <div
+            class="flex justify-center z-20 -translate-x-1/2 items-center pointer-events-none -bottom-[73px] left-1/2 search-loader htmx-indicator">
+            <svg viewBox="0 0 24 24" fill="navi" class="relative w-6 text-navi animate-ping [animation-duration:1.7s]">
+                <path
+                    d="M12 0c0.6 5.4 1.6 8.5 3.5 10.5S20.6 13.4 24 12c-5.4 0.6-8.5 1.6-10.5 3.5S10.6 20.6 12 24c-0.6-5.4-1.6-8.5-3.5-10.5S3.4 10.6 0 12c5.4-0.6 8.5-1.6 10.5-3.5S13.4 3.4 12 0z" />
+            </svg>
+            <svg viewBox="0 0 24 24" fill="navi"
+                class="relative w-7 text-navi animate-ping [animation-delay:300ms] [animation-duration:1.7s] left-8">
+                <path
+                    d="M12 0c0.6 5.4 1.6 8.5 3.5 10.5S20.6 13.4 24 12c-5.4 0.6-8.5 1.6-10.5 3.5S10.6 20.6 12 24c-0.6-5.4-1.6-8.5-3.5-10.5S3.4 10.6 0 12c5.4-0.6 8.5-1.6 10.5-3.5S13.4 3.4 12 0z" />
+            </svg>
+            <svg viewBox="0 0 24 24" fill="navi"
+                class="relative w-4 text-navi animate-ping [animation-delay:500ms] [animation-duration:1.7s] right-2">
+                <path
+                    d="M12 0c0.6 5.4 1.6 8.5 3.5 10.5S20.6 13.4 24 12c-5.4 0.6-8.5 1.6-10.5 3.5S10.6 20.6 12 24c-0.6-5.4-1.6-8.5-3.5-10.5S3.4 10.6 0 12c5.4-0.6 8.5-1.6 10.5-3.5S13.4 3.4 12 0z" />
+            </svg>
+        </div>
+
         <!-- blank space between fotter and reports -->
         <div id="blank_space" class="min-h-[120px] mt-4 mb-16">
         </div>
@@ -444,9 +468,9 @@
     <footer class="flex flex-col items-center justify-center py-8 text-center text-white min-h-fit bg-primary">
 
         <!-- newsletter -->
-        <div class="flex flex-col items-start w-full max-w-2xl gap-4 mt-4">
+        <div class="flex flex-col items-start w-5/6 max-w-2xl gap-4 mt-4 md:w-full">
             <div class="flex flex-col gap-1">
-                <p class="text-2xl font-bold text-left">Join our newsletter</p>
+                <p class="text-2xl font-bold text-center md:text-left">Join our newsletter</p>
                 <p class="max-w-lg text-sm text-white/80">We'll keep you up to date with exciting news, useful
                     content, and promotions.</p>
             </div>
@@ -459,7 +483,7 @@
 
         <hr class="w-11/12 h-px my-6 border-white/30">
 
-        <div class="flex flex-row gap-12 mx-auto">
+        <div class="flex flex-row justify-center w-5/6 gap-12 mx-auto md:w-full">
 
             <div class="flex flex-col gap-2 text-left">
                 <p class="mb-1 text-xs tracking-wide uppercase text-white/60">Company</p>
@@ -538,7 +562,7 @@
                 duration: 0.2,
                 ease: 'power2.in'
             });
-
+            document.body.classList.add('overflow-hidden'); //block scrolling while burgermenu is open
         }
 
 
@@ -549,7 +573,7 @@
                 duration: 0.2,
                 ease: 'power2.out'
             });
-
+            document.body.classList.remove('overflow-hidden');
         }
 
 

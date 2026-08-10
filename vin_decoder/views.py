@@ -65,7 +65,7 @@ def home(request):
 
 
 @login_required
-@ratelimit(key="ip", rate="3/m", block=False)
+@ratelimit(key="ip", rate="30/m", block=False)
 @require_POST
 def openai_common_car_issues(request):
     """
