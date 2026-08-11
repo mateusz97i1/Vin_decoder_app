@@ -1,0 +1,11 @@
+[run]
+source = vin_decoder
+omit =
+    */migrations/*
+    */tests/*
+    manage.py
+    vinex/wsgi.py
+    vinex/asgi.py
+
+[html]
+directory = coverage_report_html
