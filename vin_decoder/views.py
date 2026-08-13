@@ -3,7 +3,7 @@ import markdown2
 
 
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST, require_GET, require_safe
 from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -16,7 +16,7 @@ from django.db import IntegrityError
 from .forms import InputVinForm, NewsletterSubscriberForm
 from .services import get_vehicle_data_vin, openai_prompt_basic
 from .tasks import generate_pdf_task, join_newsletter
-from . models import NewsletterSubscriber
+from .models import NewsletterSubscriber
 
 # create logger
 logger = logging.getLogger(__name__)
@@ -184,22 +184,22 @@ def check_task_status(request, task_id):
         context={"failed_info": str(res.info)},
     )
 
-
+@require_safe
 def contanct_view(request):
 
     return render(request, 'contact.html')
 
-
+@require_safe
 def about_us(request):
 
     return render(request, 'about_us.html')
 
-
+@require_safe
 def privacy_policy(request):
 
     return render(request, 'privacy_policy.html')
 
-
+@require_safe
 def rules(request):
 
     return render(request, 'rules.html')
