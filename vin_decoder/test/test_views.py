@@ -89,6 +89,7 @@ class Test_newsletter_subscription:
     url_name = 'vin_decoder:thanks_newsletter_sub'
     template_name = 'partials/newsletter_block.html'
     test_valid_email = 'test@mail.com'
+    test_invalid_email = 'invalid_email'
 
     def test_newsletter_partial_correct_render(self, client : Client) -> None:
 
@@ -112,3 +113,32 @@ class Test_newsletter_subscription:
         assert response.context['success'] is True
         assert NewsletterSubscriber.objects.filter(email= self.test_valid_email).exists()
         mock_delay.assert_called_once_with(self.test_valid_email)
+
+
+    @patch('vin_decoder.views.join_newsletter.delay')
+    def test_invalid_form_to_send_mail_return_error(self, mock_delay , client : Client) -> None:
+
+        url= reverse(self.url_name)
+
+        response = client.post(url, data = {'send_email_to' : self.test_invalid_email})
+
+        assert response.status_code == 200
+        assert response.context['success'] is False
+        assert NewsletterSubscriber.objects.filter(email = self.test_invalid_email).count() == 0
+        mock_delay.assert_not_called()
+
+
+    @patch('vin_decoder.views.join_newsletter.delay')
+    def test_duplicate_email_return_error(self, mock_delay , client: Client) -> None:
+
+        NewsletterSubscriber.objects.create(email= self.test_valid_email)
+        
+        url = reverse(self.url_name)
+
+        response = client.post(url, data = {'send_email_to' : self.test_valid_email})
+
+        assert response.status_code == 200
+        assert response.context['success'] is False
+        assert response.context['error'] == 'This email has been already used.'
+        assert NewsletterSubscriber.objects.filter(email = self.test_valid_email).count() == 1
+        mock_delay.assert_not_called()
