@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from celery.result import AsyncResult
 from django.http import HttpResponse
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 
 
 
@@ -217,7 +217,8 @@ def thanks_for_newsletter_subscription(request):
         email_adress = email_form.cleaned_data['send_email_to']
 
         try:
-            NewsletterSubscriber.objects.create(email=email_adress)
+            with transaction.atomic():
+                NewsletterSubscriber.objects.create(email=email_adress)
         except IntegrityError:
             return render(
                 request,
