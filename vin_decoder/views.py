@@ -184,20 +184,25 @@ def check_task_status(request, task_id):
         context={"failed_info": str(res.info)},
     )
 
+
+
 @require_safe
 def contanct_view(request):
 
     return render(request, 'contact.html')
+
 
 @require_safe
 def about_us(request):
 
     return render(request, 'about_us.html')
 
+
 @require_safe
 def privacy_policy(request):
 
     return render(request, 'privacy_policy.html')
+
 
 @require_safe
 def rules(request):
