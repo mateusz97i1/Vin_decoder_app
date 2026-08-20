@@ -142,3 +142,40 @@ class Test_newsletter_subscription:
         assert response.context['error'] == 'This email has been already used.'
         assert NewsletterSubscriber.objects.filter(email = self.test_valid_email).count() == 1
         mock_delay.assert_not_called()
+
+
+
+class Test_export_vin_raport_pdf:
+    """ test export_vin_raport_pdf view login is requied for all tests """
+
+    pytestmark = pytest.mark.django_db
+    url_name = 'vin_decoder:export_pdf'
+    partial_template_name = "partials/pdf_loading.html"
+
+
+    @patch('vin_decoder.views.generate_pdf_task.delay')
+    def test_partial_pdfloadig_renders_correctly(self , mock_delay ,database_mock_user ,client: Client)-> None:
+
+        client.force_login(database_mock_user)
+        mock_delay.return_value.id= "fake-task-id"
+
+        url = reverse(self.url_name)
+
+        response = client.post(
+            url,
+            data ={
+                "action": "save_pdf",
+                "vin": "WBA5U9C00LFJ37061",
+                "car_description": "Some car description",
+                }
+            )
+
+        assert response.status_code == 200
+        assert self.partial_template_name in [t.name for t  in response.templates]
+        mock_delay.assert_called_once_with("WBA5U9C00LFJ37061" , "Some car description")
+
+
+    @patch('vin_decoder.views.generate_pdf_task.delay')
+    def test_get_vin_and_task_id_success(self, mock_delay ,client: Client)-> None:
+
+        pass
