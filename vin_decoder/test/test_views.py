@@ -176,6 +176,36 @@ class Test_export_vin_raport_pdf:
 
 
     @patch('vin_decoder.views.generate_pdf_task.delay')
-    def test_get_vin_and_task_id_success(self, mock_delay ,client: Client)-> None:
+    def test_get_vin_and_task_id_success(self, mock_delay, database_mock_user  ,client: Client)-> None:
 
-        pass
+        client.force_login(database_mock_user)
+        mock_delay.return_value.id= 'fake_success-id'
+
+        url= reverse(self.url_name)
+
+        response = client.post(
+            url,
+            data={
+                "action": "save_pdf",
+                "vin": "1G1FG1R77J0170121",
+                "car_description": "Some car description v2",
+            })
+
+        assert response.context["task_id"] == 'fake_success-id'
+        mock_delay.assert_called_once_with("1G1FG1R77J0170121" , "Some car description v2")
+
+
+    def test_incorrect_vin_number_redirect_home(self,  database_mock_user  ,client: Client)-> None:
+
+        client.force_login(database_mock_user)
+        url= reverse(self.url_name)
+        
+        response = client.post(
+            url,
+            data={
+                "action": "save_pdf",
+                "vin": ""
+            })
+
+        assert response.status_code == 302
+        assert response.url == reverse('vin_decoder:home')
