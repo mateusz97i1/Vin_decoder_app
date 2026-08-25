@@ -209,3 +209,40 @@ class Test_export_vin_raport_pdf:
 
         assert response.status_code == 302
         assert response.url == reverse('vin_decoder:home')
+
+
+    def test_no_action_button_redirect_home(self,  database_mock_user  ,client: Client)-> None:
+
+        client.force_login(database_mock_user)
+        url= reverse(self.url_name)
+
+        response = client.post(
+            url,
+            data={
+                'action':"",
+                'vin':'1G1FG1R77J0170121'
+            }
+        )
+
+        assert response.status_code == 302
+        assert response.url == reverse('vin_decoder:home')
+
+
+    @patch('vin_decoder.views.generate_pdf_task.delay', side_effect= Exception("boom xd") )
+    def test_save_pdf_action_returns_500_on_task_error(self, mock_delay, database_mock_user  ,client: Client)-> None:
+
+        client.force_login(database_mock_user)
+        url = reverse(self.url_name)
+
+        response = client.post(
+            url,
+            data = {
+                'action':"save_pdf",
+                'vin':'1G1FG1R77J0170121',
+                "car_description": "Some car description v3",
+            }
+        )
+
+        assert response.status_code == 500
+        assert response.content == b"Error during generating pdf."
+        mock_delay.assert_called_once_with("1G1FG1R77J0170121", "Some car description v3")
