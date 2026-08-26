@@ -246,3 +246,30 @@ class Test_export_vin_raport_pdf:
         assert response.status_code == 500
         assert response.content == b"Error during generating pdf."
         mock_delay.assert_called_once_with("1G1FG1R77J0170121", "Some car description v3")
+
+
+
+class Test_openai_common_car_issues:
+    """ test openai_common_car_issues view login is requied for all tests """
+
+    pytestmark = pytest.mark.django_db
+    template_name = 'partials/gpt_typical_issues_car.html'
+    url_name = 'vin_decoder:get_car_issues'
+
+
+    @patch('django_ratelimit.decorators.is_ratelimited', return_value= True)
+    def test_hit_rate_limit_error(self, mock_is_ratelimited, database_mock_user, client : Client)-> None:
+
+        client.force_login(database_mock_user)
+
+
+        url = reverse(self.url_name)
+
+        response = client.post(
+            url,
+            data={}
+        )
+
+        assert response.status_code == 200
+        assert self.template_name in [t.name for t in response.templates]
+        assert response.context['message_error'] == "You have reached refresh limit, Pleas wait 1 min to try agian."
