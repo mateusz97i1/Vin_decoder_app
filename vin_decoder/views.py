@@ -74,7 +74,7 @@ def openai_common_car_issues(request):
     was_limited = getattr(request, "limited", False)
 
     if was_limited:
-        message_error = "You have reached refresh limit, Pleas wait 1 min to try agian."
+        message_error = "You have reached refresh limit, Please wait 1 min to try agian."
         return render(
             request,
             "partials/gpt_typical_issues_car.html",

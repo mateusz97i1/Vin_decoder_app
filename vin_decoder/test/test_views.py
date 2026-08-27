@@ -273,3 +273,48 @@ class Test_openai_common_car_issues:
         assert response.status_code == 200
         assert self.template_name in [t.name for t in response.templates]
         assert response.context['message_error'] == "You have reached refresh limit, Pleas wait 1 min to try agian."
+
+
+    @pytest.mark.parametrize("post_data", [
+    {'car_description': 'test car description'},
+    {'action': 'submit'},
+    ])
+    def test_invalid_action_return_error(self, database_mock_user, client : Client, post_data)-> None:
+        """Tests two cases when action is missing and when car description is missing"""
+
+        client.force_login(database_mock_user)
+
+        url= reverse(self.url_name)
+
+        response = client.post(
+            url , data=post_data
+        )
+
+        assert response.status_code == 200
+        assert response.context['message_error'] == 'Invalid action'
+        assert self.template_name in [t.name for t in response.templates]
+
+
+    @patch('vin_decoder.views.openai_prompt_basic')
+    def test_data_isvalid_generating_AI_reponse_success(self, open_AI_prompt_mock_func,  database_mock_user, client: Client )-> None:
+
+        client.force_login(database_mock_user)
+        url= reverse(self.url_name)
+
+        open_AI_prompt_mock_func.return_value = ("Check your brake pads regularly.", None)
+
+        response = client.post(
+            url,
+            data={
+                'action': 'submit',
+                'car_description': 'test car description',
+                'vin':'1G1FG1R77J0170121'
+            }
+        )
+
+
+        assert response.status_code == 200
+        assert response.context['vin'] == '1G1FG1R77J0170121'
+        assert self.template_name in [t.name for t in response.templates]
+        open_AI_prompt_mock_func.assert_called_once_with('test car description')
+        assert 'Check your brake pads regularly.' in response.context['results_html']
