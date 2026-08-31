@@ -2,7 +2,7 @@ import pytest
 
 from django.urls import reverse
 from django.test import Client
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 
 from vin_decoder.models import NewsletterSubscriber, MetadataRaports
 
@@ -318,3 +318,81 @@ class Test_openai_common_car_issues:
         assert self.template_name in [t.name for t in response.templates]
         open_AI_prompt_mock_func.assert_called_once_with('test car description')
         assert 'Check your brake pads regularly.' in response.context['results_html']
+
+
+
+class Test_check_task_status:
+    """ test check_task_status view login is requied for all tests """
+
+    pytestmark= pytest.mark.django_db
+    url_name='vin_decoder:check_task_status'
+    template_name_loading='partials/pdf_loading.html'
+    template_name_download="partials/pdf_download.html"
+    template_name_failed="partials/pdf_download_failed.html"
+
+
+    #Decorators are going from bottom to up order
+    @patch('vin_decoder.views.AsyncResult')
+    def test_template_render_status_download_not_ready(self, mock_async_result_cls, database_mock_user, client :Client)-> None:
+
+        mock_async_result_cls.return_value.ready.return_value = False
+        mock_async_result_cls.return_value.status = 'PENDING'
+
+        client.force_login(database_mock_user)
+
+        url= reverse(self.url_name, kwargs={'task_id': 'fake-task-id'})
+
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert self.template_name_loading in [t.name for t in response.templates]
+        assert response.context['status'] == 'PENDING'
+
+
+    @patch('vin_decoder.views.AsyncResult')
+    def test_status_success_get_download_url(self, mock_async_result_cls, database_mock_user, client : Client)-> None:
+
+        mock_async_result_cls.return_value.ready.return_value = True
+        mock_async_result_cls.return_value.status = 'SUCCESS'
+        mock_async_result_cls.return_value.result = 'test-download-url'
+
+        client.force_login(database_mock_user)
+
+        url = reverse(self.url_name, kwargs= {'task_id': 'fake-task-id-download'})
+
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert self.template_name_download in [t.name for t in response.templates]
+        assert self.template_name_failed not in [t.name for t in response.templates]
+        assert response.context['download_url'] == 'test-download-url'
+        mock_async_result_cls.assert_called_once_with('fake-task-id-download')
+
+
+    @patch('vin_decoder.views.AsyncResult')
+    def test_status_failed_get_error(self,  mock_async_result_cls, database_mock_user, client: Client)-> None:
+
+        mock_async_result_cls.return_value.ready.return_value = True
+        mock_async_result_cls.return_value.status = 'FAILURE'
+        mock_async_result_cls.return_value.info = 'Error occurred during generating download url'
+
+        client.force_login(database_mock_user)
+
+        url= reverse(self.url_name, kwargs= {'task_id': 'fake-task-id-download'})
+
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert self.template_name_failed in [t.name for t in response.templates]
+        assert self.template_name_download not in [t.name for t in response.templates]
+        assert response.context['failed_info'] == 'Error occurred during generating download url'
+
+
+    def test_anonymous_user_redirected_to_login(self, client: Client)-> None:
+
+        url= reverse(self.url_name , kwargs= {'task_id': 'fake-task-id-download'})
+
+        resposne = client.get(url)
+
+        assert resposne.status_code == 302
+        assert '/login' in resposne.url

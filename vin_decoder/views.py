@@ -157,6 +157,8 @@ def check_task_status(request, task_id):
     res = AsyncResult(task_id)
     logger.info(f"Task {task_id} status: {res.status}")
 
+
+
     # If it's still processing, keep polling
     if not res.ready():
         return render(
